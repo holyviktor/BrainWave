@@ -1,4 +1,5 @@
 ﻿*.com
+*.csproj
 *.class
 *.dll
 *.exe

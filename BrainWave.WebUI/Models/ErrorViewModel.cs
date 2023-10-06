@@ -1,4 +1,4 @@
-namespace BrainWave.Models
+namespace BrainWave.WebUI.Models
 {
     public class ErrorViewModel
     {

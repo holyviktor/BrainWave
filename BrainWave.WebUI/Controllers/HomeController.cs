@@ -1,8 +1,8 @@
-﻿using BrainWave.Models;
+﻿using BrainWave.WebUI.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
-namespace BrainWave.Controllers
+namespace BrainWave.WebUI.Controllers
 {
     public class HomeController : Controller
     {
