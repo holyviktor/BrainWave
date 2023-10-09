@@ -1,7 +1,13 @@
+using BrainWave.Infrastructure;
+using BrainWave.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddStorage(builder.Configuration);
+
 
 var app = builder.Build();
 
