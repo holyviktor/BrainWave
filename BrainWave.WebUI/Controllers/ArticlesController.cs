@@ -24,7 +24,7 @@ namespace BrainWave.WebUI.Controllers
             {
                 Sort = listSort,
                 Filter = null,
-                Categories = _dbContext.Categoris.ToList()
+                Categories = _dbContext.Categories.ToList()
             };
             ArticlesViewModel articlesViewModel = new ArticlesViewModel
             {

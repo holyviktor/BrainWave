@@ -75,7 +75,7 @@ namespace BrainWave.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categoris");
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("BrainWave.Core.Entities.Comment", b =>
@@ -92,7 +92,7 @@ namespace BrainWave.Infrastructure.Migrations
                     b.Property<DateTime>("Date")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 10, 8, 14, 30, 44, 305, DateTimeKind.Utc).AddTicks(5731));
+                        .HasDefaultValue(new DateTime(2023, 10, 13, 12, 2, 10, 361, DateTimeKind.Utc).AddTicks(8479));
 
                     b.Property<string>("Text")
                         .IsRequired()
@@ -109,6 +109,44 @@ namespace BrainWave.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("BrainWave.Core.Entities.Complaint", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ArticleId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ReasonId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StatusId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ArticleId");
+
+                    b.HasIndex("ReasonId");
+
+                    b.HasIndex("StatusId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Complaints");
                 });
 
             modelBuilder.Entity("BrainWave.Core.Entities.Following", b =>
@@ -157,6 +195,23 @@ namespace BrainWave.Infrastructure.Migrations
                     b.ToTable("Likes");
                 });
 
+            modelBuilder.Entity("BrainWave.Core.Entities.ReasonComplaint", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ReasonComplaints");
+                });
+
             modelBuilder.Entity("BrainWave.Core.Entities.Role", b =>
                 {
                     b.Property<int>("Id")
@@ -196,6 +251,23 @@ namespace BrainWave.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Savings");
+                });
+
+            modelBuilder.Entity("BrainWave.Core.Entities.StatusComplaint", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("StatusComplaints");
                 });
 
             modelBuilder.Entity("BrainWave.Core.Entities.User", b =>
@@ -288,6 +360,41 @@ namespace BrainWave.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("BrainWave.Core.Entities.Complaint", b =>
+                {
+                    b.HasOne("BrainWave.Core.Entities.Article", "Article")
+                        .WithMany("Complaints")
+                        .HasForeignKey("ArticleId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("BrainWave.Core.Entities.ReasonComplaint", "Reason")
+                        .WithMany("Complaints")
+                        .HasForeignKey("ReasonId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("BrainWave.Core.Entities.StatusComplaint", "Status")
+                        .WithMany("Complaints")
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("BrainWave.Core.Entities.User", "User")
+                        .WithMany("Complaints")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Article");
+
+                    b.Navigation("Reason");
+
+                    b.Navigation("Status");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("BrainWave.Core.Entities.Following", b =>
                 {
                     b.HasOne("BrainWave.Core.Entities.User", "FollowingUser")
@@ -360,6 +467,8 @@ namespace BrainWave.Infrastructure.Migrations
                 {
                     b.Navigation("Comments");
 
+                    b.Navigation("Complaints");
+
                     b.Navigation("Likes");
 
                     b.Navigation("Savings");
@@ -370,9 +479,19 @@ namespace BrainWave.Infrastructure.Migrations
                     b.Navigation("Articles");
                 });
 
+            modelBuilder.Entity("BrainWave.Core.Entities.ReasonComplaint", b =>
+                {
+                    b.Navigation("Complaints");
+                });
+
             modelBuilder.Entity("BrainWave.Core.Entities.Role", b =>
                 {
                     b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("BrainWave.Core.Entities.StatusComplaint", b =>
+                {
+                    b.Navigation("Complaints");
                 });
 
             modelBuilder.Entity("BrainWave.Core.Entities.User", b =>
@@ -380,6 +499,8 @@ namespace BrainWave.Infrastructure.Migrations
                     b.Navigation("Articles");
 
                     b.Navigation("Comments");
+
+                    b.Navigation("Complaints");
 
                     b.Navigation("Followings");
 

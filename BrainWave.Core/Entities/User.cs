@@ -23,6 +23,7 @@ namespace BrainWave.Core.Entities
         public ICollection<Comment>? Comments { get; set; }
         public ICollection<Saving>? Savings { get; set; }
         public ICollection<Following>? Followings { get; set; }
+        public ICollection<Complaint>? Complaints { get; set; }
 
     }
 }

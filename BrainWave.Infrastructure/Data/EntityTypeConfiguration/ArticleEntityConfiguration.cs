@@ -18,10 +18,6 @@ namespace BrainWave.Infrastructure.Data.EntityTypeConfiguration
             builder.Property(x => x.Title)
                 .HasMaxLength(150)
                 .IsRequired();
-
-
-
-
         }
     }
 }
