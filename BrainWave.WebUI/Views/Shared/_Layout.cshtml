@@ -3,46 +3,97 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - BrainWave.WebUI</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <title>@ViewData["Title"] - BrainWave</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/BrainWave.WebUI.styles.css" asp-append-version="true" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BrainWave.WebUI</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3 header-background">
+            <div class="container d-flex justify-content-end">
+                <div>
+                    <a class="navbar-brand d-flex justify-content-center align-items-center logo" asp-area="" asp-controller="Home" asp-action="Index">
+                        <img class="logo d-block" src="media/logo.png" alt="logo">
+                        <p class="m-0">BrainWave</p>
+
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                            aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </div>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between header-nav">
+                    <ul class="navbar-nav flex-grow-1 d-flex justify-content-end">
+                        <li class="nav-item d-flex justify-content-center align-items-center">
+                            <label class="m-auto d-block">
+                                <input type="text" placeholder="Search">
+                            </label>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">
+                                About
+                                us
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home"
+                               asp-action="Privacy">Articles</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Profile</a>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+
+    <main role="main" class="pb-5 pt-2">
+        @RenderBody()
+
+    </main>
+
 
     <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2023 - BrainWave.WebUI - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        <div class="container py-3 d-flex justify-content-between align-items-center">
+            <div>
+                <a class="navbar-brand d-flex align-items-center logo" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img class="logo d-block" src="media/logo.png" alt="logo">
+                    <p class="m-0">BrainWave</p>
+                </a>
+            </div>
+            <div class="navigation-footer">
+                <h3>Navigation</h3>
+                <div class="nav-wrapper d-grid">
+                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">About us</a>
+                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Articles</a>
+                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Profile</a>
+                </div>
+            </div>
+            <div class="contacts-footer">
+                <h3>Contacts</h3>
+                <div class="contacts-wrapper d-flex justify-content-between pt-2">
+                    <a asp-area="" asp-controller="Home" asp-action="Index">
+                        <img src="~/media/logo.png" alt="contact">
+                    </a>
+                    <a asp-area="" asp-controller="Home" asp-action="Index">
+                        <img src="~/media/logo.png" alt="contact">
+                    </a>
+                    <a asp-area="" asp-controller="Home" asp-action="Index">
+                        <img src="~/media/logo.png" alt="contact">
+                    </a>
+                </div>
+            </div>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="./js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
