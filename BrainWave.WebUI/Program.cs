@@ -1,5 +1,6 @@
 using BrainWave.Infrastructure;
 using BrainWave.Infrastructure.Data;
+using BrainWave.WebUI.Middlewares;
 using Microsoft.EntityFrameworkCore;
 using System.Web.Http;
 
@@ -9,8 +10,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddStorage(builder.Configuration);
 
+builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
