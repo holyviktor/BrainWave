@@ -1,6 +1,7 @@
 using BrainWave.Infrastructure;
 using BrainWave.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Web.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 

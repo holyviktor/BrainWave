@@ -1,0 +1,27 @@
+﻿@model ProfileInputViewModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="profile">
+            <form>
+                <div>
+                    <h1>Profile editing</h1>
+                    <div class="d-flex justify-content-between">
+                        <div class="author-article d-flex justify-content-start align-items-center">
+                            <img class="d-block" src="@Model.Photo" alt="avatar">
+                            <input type="text" value="@Model.Name @Model.Surname" />
+                        </div>
+
+                    </div>
+                </div>
+                <div>
+
+                    <input value="@Model.Description" />
+                    <input value="@Model.Password" />
+                </div>
+                <div>
+                    <button type="submit">Create profile</button>
+                </div>
+            </form>
+        </div>

@@ -1,4 +1,5 @@
-﻿using BrainWave.Infrastructure.Data;
+﻿using BrainWave.Core.Entities;
+using BrainWave.Infrastructure.Data;
 using BrainWave.WebUI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +20,7 @@ namespace BrainWave.WebUI.Controllers
         // GET: ArticlesController
         public ActionResult Index()
         {
-            List<string> listSort = new List<string>{"first", "second"};
+            List<string> listSort = new List<string> { "first", "second" };
             FilterViewModel filterViewModel = new FilterViewModel
             {
                 Sort = listSort,
@@ -35,12 +36,9 @@ namespace BrainWave.WebUI.Controllers
             return View(articlesViewModel);
         }
 
-        public ArticlesViewModel ApplyFilters(ArticlesViewModel articlesViewModel)
-        {
-            return articlesViewModel;
-        }
-
-        // GET: ArticlesController/Details/5
-        
+    public ArticlesViewModel ApplyFilters(ArticlesViewModel articlesViewModel)
+    {
+        return articlesViewModel;
+    }
     }
 }

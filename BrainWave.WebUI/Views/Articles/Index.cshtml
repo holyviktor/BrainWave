@@ -1,7 +1,7 @@
 ﻿@using Microsoft.IdentityModel.Tokens
 @model ArticlesViewModel
 @{
-    ViewData["Title"] = "ArticlesViewModel";
+    ViewData["Title"] = "Articles";
 }
 
 <div class="container">
@@ -13,7 +13,7 @@
                 @foreach (var article in Model.Articles)
                 {
                     <input type="hidden" id="@article.Id" />
-                    <div class="article pb-3">
+                    <div class="article pb-3" target="@article.Id">
                         <h2>Name of article</h2>
                         <div class="author-article d-flex justify-content-start align-items-center">
                             <img class="d-block" src="~/media/ava.jpg" alt="avatar">
@@ -34,22 +34,23 @@
                         <div class="interactions">
                             <form class="d-flex justify-content-between" action="">
                                 <div class="likes">
-                                    <button class="d-block" type="submit">
-                                        <img src="~/media/not-liked.png" alt="">
+                                    
+                                    <button class="d-block" type="submit" status="not-liked">
+                                        <img src="~/media/not-liked.png" second="/media/liked.png" alt="">
                                     </button>
-                                    <p class="m-0">1790</p>
+                                    <p class="m-0">@article.Likes.Count</p>
                                 </div>
                                 <div class="savings">
                                     <button class="d-block" type="submit">
                                         <img src="~/media/savings.png" alt="">
                                     </button>
-                                    <p class="m-0">1790</p>
+                                    <p class="m-0">@article.Savings.Count</p>
                                 </div>
                                 <div class="comments">
                                     <button class="d-block" type="submit">
                                         <img src="~/media/comments.png" alt="">
                                     </button>
-                                    <p class="m-0">1790</p>
+                                    <p class="m-0">@article.Comments.Count</p>
                                 </div>
                                 <div class="download">
                                     <button class="d-block" type="submit">

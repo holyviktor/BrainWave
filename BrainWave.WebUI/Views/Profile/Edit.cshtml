@@ -1,0 +1,53 @@
+﻿@model ProfileInputViewModel
+@{
+    ViewData["Title"] = "Edit Profile";
+}
+<div class="container">
+
+    <div class="d-flex justify-content-start">
+        <div class="side-panel">
+            <div>
+                <a href="">Edit profile</a>
+            </div>
+            <div>
+                <a href="">My articles</a>
+            </div>
+            <div>
+                <a href="">Liked posts</a>
+            </div>
+            <div>
+                <a href="">Saved posts</a>
+            </div>
+            <div>
+                <a href="">Wallet</a>
+            </div>
+            <div>
+                <button>
+                    Exit
+                </button>
+            </div>
+        </div>
+        <div class="profile">
+            <form>
+                <div>
+                    <h1>Profile editing</h1>
+                    <div class="d-flex justify-content-between">
+                        <div class="author-article d-flex justify-content-start align-items-center">
+                            <img class="d-block" src="@Model.Photo" alt="avatar">
+                            <input type="text" value="@Model.Name @Model.Surname" />
+                        </div>
+
+                    </div>
+                </div>
+                <div>
+
+                    <input value="@Model.Description" />
+                    <input value="@Model.Password" />
+                </div>
+                <div>
+                    <button type="submit">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
