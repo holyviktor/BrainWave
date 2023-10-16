@@ -38,19 +38,35 @@
                                     <button class="d-block" type="submit" status="not-liked">
                                         <img src="~/media/not-liked.png" second="/media/liked.png" alt="">
                                     </button>
+                                    @if (article.Likes.IsNullOrEmpty())
+                                    {
+                                        <p class="m-0">0</p>
+                                    }else{
                                     <p class="m-0">@article.Likes.Count</p>
+                                    }
                                 </div>
                                 <div class="savings">
                                     <button class="d-block" type="submit">
                                         <img src="~/media/savings.png" alt="">
                                     </button>
-                                    <p class="m-0">@article.Savings.Count</p>
+                                    @if (article.Savings.IsNullOrEmpty())
+                                    {
+                                        <p class="m-0">0</p>
+                                    } else{
+                                        <p class="m-0">@article.Savings.Count</p>
+                                    }
                                 </div>
                                 <div class="comments">
                                     <button class="d-block" type="submit">
                                         <img src="~/media/comments.png" alt="">
                                     </button>
-                                    <p class="m-0">@article.Comments.Count</p>
+                                    @if (article.Comments.IsNullOrEmpty())
+                                    {
+                                        <p class="m-0">0</p>
+                                    }
+                                    else{
+                                        <p class="m-0">@article.Comments.Count</p>
+                                    }
                                 </div>
                                 <div class="download">
                                     <button class="d-block" type="submit">

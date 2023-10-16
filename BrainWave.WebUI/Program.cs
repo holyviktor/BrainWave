@@ -2,15 +2,16 @@ using BrainWave.Infrastructure;
 using BrainWave.Infrastructure.Data;
 using BrainWave.WebUI.Middlewares;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 using System.Web.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(); 
 builder.Services.AddStorage(builder.Configuration);
 
-builder.Services.AddTransient<ExceptionHandlingMiddleware>();
+/*builder.Services.AddTransient<ExceptionHandlingMiddleware>();*/
 
 var app = builder.Build();
 

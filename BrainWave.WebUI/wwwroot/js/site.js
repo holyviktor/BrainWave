@@ -27,13 +27,13 @@ articles.forEach(article => {
     })
 })
 
-async function patchLike(id, status) {
+async function patchLike(articleId, status) {
     const headers = new Headers({
         "Content-Type": "application/json"
     })
-    const result = await fetch(`${likeUrl}/${id}`, {
+    const result = await fetch(`${likeUrl}`, {
         method: 'PATCH',
-        body: JSON.stringify({ status }),
+        body: JSON.stringify({ articleId, status }),
         headers
     })
 
