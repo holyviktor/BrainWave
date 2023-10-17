@@ -6,8 +6,8 @@ namespace BrainWave.WebUI.Middlewares
     public record ExceptionResponse(HttpStatusCode StatusCode, string Description);
     public class ExceptionHandlingMiddleware:IMiddleware
     {
-        private readonly ILogger _logger;
-        public ExceptionHandlingMiddleware(ILogger logger)=>_logger = logger;
+        private readonly ILogger<ExceptionHandlingMiddleware> _logger;
+        public ExceptionHandlingMiddleware(ILogger<ExceptionHandlingMiddleware> logger)=>_logger = logger;
 
         public async Task InvokeAsync(HttpContext httpContext, RequestDelegate next)
         {
