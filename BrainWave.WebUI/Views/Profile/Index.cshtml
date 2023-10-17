@@ -1,4 +1,6 @@
-﻿@model ProfileViewModel
+﻿@using Microsoft.AspNetCore.Mvc.Localization;
+@inject IViewLocalizer _localizer;
+@model ProfileViewModel
 @{
     ViewData["Title"] = "Profile";
 }
@@ -7,29 +9,29 @@
     <div class="d-flex justify-content-start">
         <div class="side-panel">
             <div>
-                <a href="">Edit profile</a>
+                <a href="">@_localizer["Edit"]</a>
             </div>
             <div>
-                <a href="">My articles</a>
+                <a href="">@_localizer["Articles"]</a>
             </div>
             <div>
-                <a href="">Liked posts</a>
+                <a href="">@_localizer["Liked"]</a>
             </div>
             <div>
-                <a href="">Saved posts</a>
+                <a href="">@_localizer["Saved"]</a>
             </div>
             <div>
-                <a href="">Wallet</a>
+                <a href="">@_localizer["Wallet"]</a>
             </div>
             <div>
                 <button>
-                    Exit
+                    @_localizer["Exit"]
                 </button>
             </div>
         </div>
         <div class="profile">
             <div>
-                <h1>Profile</h1>
+                <h1>@_localizer["Profile"]</h1>
                 <div class="d-flex justify-content-between">
                     <div class="author-article d-flex justify-content-start align-items-center">
                         <img class="d-block" src="./media/ava.jpg" alt="avatar">
@@ -41,7 +43,7 @@
                                 2190
                             </p>
                             <p>
-                                posts
+                                @_localizer["Posts"]
                             </p>
                         </div>
                         <div class="followers">
@@ -49,7 +51,7 @@
                                 21
                             </p>
                             <p>
-                                followers
+                                @_localizer["Followers"]
                             </p>
                         </div>
                         <div class="followings">
@@ -57,7 +59,7 @@
                                 219
                             </p>
                             <p>
-                                followings
+                                @_localizer["Followings"]
                             </p>
                         </div>
                     </div>
@@ -73,7 +75,7 @@
                 <div>
                 </div>
             </div>
-            <h1>Recent articles</h1>
+            <h1>@_localizer["Recent"]</h1>
             <div class="d-flex justify-content-between">
                 <div class="articles-content">
                     <div class="article pb-3">

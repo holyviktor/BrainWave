@@ -1,11 +1,13 @@
-﻿@using Microsoft.IdentityModel.Tokens
+﻿@using Microsoft.AspNetCore.Mvc.Localization;
+@using Microsoft.IdentityModel.Tokens
 @model ArticlesViewModel
+@inject IViewLocalizer _localizer;
 @{
     ViewData["Title"] = "Articles";
 }
 
 <div class="container">
-    <h1>Articles</h1>
+    <h1>@_localizer["ArticlesTitle"]</h1>
     <div class="d-flex justify-content-between">
         <div class="articles-content">
             @if (!Model.Articles.IsNullOrEmpty())

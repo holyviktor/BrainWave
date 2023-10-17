@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Mvc.Localization;
+@inject IViewLocalizer _localizer;
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -32,22 +34,34 @@
                             </label>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">
-                                About
-                                us
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                                @_localizer["Home"]
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home"
-                               asp-action="Privacy">Articles</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="About">
+                                @_localizer["About"]
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Profile</a>
+                            <a class="nav-link" asp-area="" asp-controller="Articles"
+                               asp-action="Index">
+                                @_localizer["Articles"]                           
+                            </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Profile" asp-action="Index">
+                                @_localizer["Profile"]
+                                </a>
+                        </li>
+
+                        <li class="nav-item">
+                            @await Html.PartialAsync("_CulturePartial")
+                        </li>
+
+                        
                     </ul>
+                    
                 </div>
             </div>
         </nav>
@@ -70,14 +84,14 @@
             <div class="navigation-footer">
                 <h3>Navigation</h3>
                 <div class="nav-wrapper d-grid">
-                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">About us</a>
-                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Articles</a>
-                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Profile</a>
+                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">@_localizer["Home"]</a>
+                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="About">@_localizer["About"]</a>
+                    <a class="nav-link" asp-area="" asp-controller="Articles" asp-action="Index">@_localizer["Articles"]</a>
+                    <a class="nav-link" asp-area="" asp-controller="Profile" asp-action="Index">@_localizer["Profile"]</a>
                 </div>
             </div>
             <div class="contacts-footer">
-                <h3>Contacts</h3>
+                <h3>@_localizer["Contacts"]</h3>
                 <div class="contacts-wrapper d-flex justify-content-between pt-2">
                     <a asp-area="" asp-controller="Home" asp-action="Index">
                         <img src="~/media/logo.png" alt="contact">
