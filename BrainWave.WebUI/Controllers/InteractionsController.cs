@@ -22,7 +22,7 @@ namespace BrainWave.WebUI.Controllers
         }
         // GET: InteractionsController
         [HttpPatch ("/articles/likes")]
-        public InteractionsLikesOutputViewModel Likes(InteractionsViewModel interactionsViewModel)
+        public InteractionsOutputViewModel Likes(InteractionsViewModel interactionsViewModel)
         {
             if (!ModelState.IsValid)
             {
@@ -31,17 +31,17 @@ namespace BrainWave.WebUI.Controllers
             var userId = 2;
             var statusSuccess = _interactionsService.EditLike(interactionsViewModel.Status, interactionsViewModel.ArticleId, userId);
             var likesCount = _dbContext.Likes.Count(m => m.ArticleId == interactionsViewModel.ArticleId);
-            var interactionsLikes = new InteractionsLikesOutputViewModel
+            var interactionsLikes = new InteractionsOutputViewModel
             {
                 StatusSuccess = statusSuccess,
-                CountLikes = likesCount
+                CountInteractions = likesCount
             };
             Console.WriteLine(likesCount.ToString()+"count likes");
 
             return (interactionsLikes);
         }
         [HttpPatch("/articles/savings")]
-        public InteractionsLikesOutputViewModel Savings(InteractionsViewModel interactionsViewModel)
+        public InteractionsOutputViewModel Savings(InteractionsViewModel interactionsViewModel)
         {
             if (!ModelState.IsValid)
             {
@@ -50,10 +50,10 @@ namespace BrainWave.WebUI.Controllers
             var userId = 2;
             var statusSuccess = _interactionsService.EditSaving(interactionsViewModel.Status, interactionsViewModel.ArticleId, userId);
             var savingsCount = _dbContext.Savings.Count(m => m.ArticleId == interactionsViewModel.ArticleId);
-            var interactionsSavings = new InteractionsLikesOutputViewModel
+            var interactionsSavings = new InteractionsOutputViewModel
             {
                 StatusSuccess = statusSuccess,
-                CountLikes = savingsCount
+                CountInteractions = savingsCount
             };
             Console.WriteLine(savingsCount.ToString() + "count savings");
 

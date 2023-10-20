@@ -10,7 +10,7 @@
     <h1>@_localizer["ArticlesTitle"]</h1>
     <div class="d-flex justify-content-between">
         <div class="articles-content">
-            @if (!Model.Articles.IsNullOrEmpty())
+            @if (Model.Articles != null)
             {
                 @foreach (var article in Model.Articles)
                 {
@@ -48,8 +48,8 @@
                                     }
                                 </div>
                                 <div class="savings">
-                                    <button class="d-block" type="submit">
-                                        <img src="~/media/savings.png" alt="">
+                                    <button class="d-block" type="submit" statusSave="not-saved">
+                                        <img src="~/media/not-saved.png" secondSave="/media/saved.png" alt="">
                                     </button>
                                     @if (article.Savings.IsNullOrEmpty())
                                     {
@@ -67,7 +67,7 @@
                                         <p class="m-0">0</p>
                                     }
                                     else{
-                                        <p class="m-0">@article.Comments.Count</p>
+                                        <p class="m-0">@article.Comments</p>
                                     }
                                 </div>
                                 <div class="download">
@@ -80,11 +80,29 @@
                         <div class="comments-section">
                             <div>
                                 <label>
-                                    <input type="text" placeholder="Write a comment" name="comment">
+                                    <input class="comment-input" type="text" placeholder="Write a comment" name="comment">
                                 </label>
+                                <button class="sender-comment">Send</button>
                             </div>
-                            <div>
+                            <div class="comments-list">
+                                @if (article.Comments != null){
+                                @foreach(var comment in article.Comments){
+                                <div class="comment pb-1" targetComment="@comment.Id">
+
+                                    <div class="author-comment d-flex justify-content-start align-items-center">
+
+                                        <img class="d-block" src="~/media/ava.jpg" alt="avatar">
+                                        <p class="m-0">Name Surname</p>
+                                    </div>
+                                    <div>
+                                        Comment
+                                    </div>
+                                </div>
+                                }
+                                }
+
                                 <div class="comment pb-1">
+
                                     <div class="author-comment d-flex justify-content-start align-items-center">
 
                                         <img class="d-block" src="~/media/ava.jpg" alt="avatar">

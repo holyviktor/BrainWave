@@ -16,12 +16,13 @@ namespace BrainWave.Application.Services
         public bool EditLike(bool status, int idArticle, int idUser)
         {
             bool statusSuccess = false;
-            int likesCount = 0;
             var authorisedUser = _dbContext.Users.FirstOrDefault(m => m.Id == idUser);
             var articleCurrent = _dbContext.Articles.FirstOrDefault(m => m.Id == idArticle);
-                
-            if (authorisedUser != null && articleCurrent != null)
-            {
+
+            if (authorisedUser == null || articleCurrent == null)
+            { 
+                throw new ArgumentException(); 
+            }else {
                 var likeCurrent = _dbContext.Likes
                     .Where(m => m.UserId == authorisedUser.Id)
                     .FirstOrDefault(m => m.ArticleId == articleCurrent.Id);
@@ -46,7 +47,7 @@ namespace BrainWave.Application.Services
                     }
                 }
                 _dbContext.SaveChanges();
-                
+
             }
 
             return statusSuccess;
