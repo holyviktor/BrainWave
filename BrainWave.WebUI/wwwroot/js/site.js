@@ -13,27 +13,34 @@ articles.forEach(article => {
     const commentInput = article.querySelector('.comment-input')
     const commentAmount = article.querySelector('.comments p')
     const commentSection = article.querySelector('.comments-list') 
+    const id = article.getAttribute("target")
 
-    const commentPattern = (comment,  avatar = "/media/ava.jpg", name = "Name Surname") => `<div class="comment pb-1" targetComment="@comment.Id">
-
+    const commentPattern = (comment, avatar = "/media/ava.jpg", name = "Name Surname") => `<div class="comment d-flex justify-content-between pb-1" targetComment="${comment.id}">
+                                    <div>
                                     <div class="author-comment d-flex justify-content-start align-items-center">
 
                                         <img class="d-block" src="${avatar}" alt="avatar">
                                         <p class="m-0">${name}</p>
                                     </div>
                                     <div>
-                                        ${comment}
+                                        ${comment.text}
                                     </div>
+                                    </div>
+                                    <button class="delete-button">Delete</button> 
                                 </div>`
 
-    commentButton.addEventListener("click", () => {
-        const id = article.getAttribute("target")
- 
+    addDeleteListeners(commentSection, id, commentAmount)
 
+
+    commentButton.addEventListener("click", () => {
+     
         patchComment(+id, commentInput.value)
-            .then(() => {
+            .then((response) => {
                 commentAmount.innerText = +commentAmount.innerText + 1
-                commentSection.innerHTML = commentPattern(commentInput.value) + commentSection.innerHTML
+                commentSection.innerHTML = commentPattern({
+                    text: commentInput.value,
+                    id: response.id
+                }) + commentSection.innerHTML
                 commentInput.value = ""
             })
     })
@@ -41,7 +48,6 @@ articles.forEach(article => {
     button.addEventListener("click", (e) => {
         e.preventDefault()
         const status = button.getAttribute("status")
-        const id = article.getAttribute("target")
         const image = button.querySelector("img")
         patchLike(id, status === "not-liked")
             .then(response => {
@@ -58,6 +64,33 @@ articles.forEach(article => {
        
     })
 })
+
+function addDeleteListeners(commentsContainer, arcticleId, commentAmount) {
+
+    commentsContainer.addEventListener("click", (e) => {
+        const tag = e.target.tagName;
+        const classN = e.target.className;
+        console.log(tag, classN)
+        if (tag.toLowerCase() !== 'button' || classN !== 'delete-button') return;
+
+        const parent = e.target.parentElement
+
+        const commentId = +parent.getAttribute("targetComment")
+        console.log(commentId, parent);
+
+        deleteComment(commentId, arcticleId)
+            .then((a) => {
+                if (!a.commentId) {
+                    return
+                }
+                
+                commentAmount.innerText = +commentAmount.innerText - 1
+                commentsContainer.removeChild(parent)
+
+            })
+    })
+
+}
 
 async function patchLike(articleId, status) {
     const headers = new Headers({
@@ -80,6 +113,20 @@ async function patchComment(articleId, comment) {
     const result = await fetch(`${commentAddUrl}`, {
         method: 'PATCH',
         body: JSON.stringify({ articleId, comment }),
+        headers
+    })
+
+    const response = await result.json();
+    return response
+}
+
+async function deleteComment(commentId, articleId) {
+    const headers = new Headers({
+        "Content-Type": "application/json"
+    })
+    const result = await fetch(`${commentDeleteUrl}`, {
+        method: 'DELETE',
+        body: JSON.stringify({ articleId, commentId }),
         headers
     })
 

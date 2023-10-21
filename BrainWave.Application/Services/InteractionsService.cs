@@ -2,6 +2,8 @@
 using BrainWave.Core.Entities;
 using BrainWave.Core.Interfaces;
 using BrainWave.Infrastructure.Data;
+using System.Net;
+using System.Web.Http;
 
 namespace BrainWave.Application.Services
 {
@@ -92,15 +94,14 @@ namespace BrainWave.Application.Services
             return statusSuccess;
         }
 
-        public bool AddComment(int idArticle, int idUser, string comment)
+        public Comment AddComment(int idArticle, int idUser, string comment)
         {
-
-            bool statusSuccess = false;
             var authorisedUser = _dbContext.Users.FirstOrDefault(m => m.Id == idUser);
             var articleCurrent = _dbContext.Articles.FirstOrDefault(m => m.Id == idArticle);
+            Comment commentNew;
             if (authorisedUser != null && articleCurrent != null)
             {
-                var commentNew = new Comment
+                commentNew = new Comment
                 {
                     User = authorisedUser,
                     Article = articleCurrent,
@@ -109,9 +110,13 @@ namespace BrainWave.Application.Services
                 };
                 _dbContext.Add(commentNew);
                 _dbContext.SaveChanges();
-                statusSuccess = true;
             }
-            return statusSuccess;
+            else
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+            
+            return commentNew;
         }
 
         public bool DeleteComment(int idArticle, int idUser, int idComment)
