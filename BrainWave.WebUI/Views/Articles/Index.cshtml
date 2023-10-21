@@ -16,47 +16,51 @@
                 {
                     <input type="hidden" id="@article.Id" />
                     <div class="article pb-3" target="@article.Id">
-                        <h2>Name of article</h2>
+                        <h2>@article.Title</h2>
                         <div class="author-article d-flex justify-content-start align-items-center">
                             <img class="d-block" src="~/media/ava.jpg" alt="avatar">
-                            <p>Name Surname</p>
+                            <p>@article.User.Name @article.User.Surname</p>
                         </div>
-                        <p>16.06.2035</p>
-                        <p>Category</p>
+                        <p>@article.Date</p>
+                        <p>@article.CategoryName</p>
                         <div>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-                            et dolore magna aliqua.
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                            consequat.
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-                            pariatur.
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-                            est laborum.
+                            @article.Text
                         </div>
                         <div class="interactions">
                             <form class="d-flex justify-content-between" action="">
                                 <div class="likes">
-                                    
-                                    <button class="d-block" type="submit" status="not-liked">
-                                        <img src="~/media/not-liked.png" second="/media/liked.png" alt="">
-                                    </button>
-                                    @if (article.Likes.IsNullOrEmpty())
+                                    @if (!article.IsLiked)
                                     {
-                                        <p class="m-0">0</p>
-                                    }else{
-                                    <p class="m-0">@article.Likes.Count</p>
+                                        <button class="d-block" type="submit" status="not-liked">
+                                            <img src="~/media/not-liked.png" second="/media/liked.png" alt="">
+                                        </button>
                                     }
+                                    else
+                                    {
+                                        <button class="d-block" type="submit" status="liked">
+                                            <img src="~/media/liked.png" second="/media/not-liked.png" alt="">
+                                        </button>
+                                    }
+
+                                    <p class="m-0">@article.LikesCount</p>
+
                                 </div>
                                 <div class="savings">
-                                    <button class="d-block" type="submit" statusSave="not-saved">
-                                        <img src="~/media/not-saved.png" secondSave="/media/saved.png" alt="">
-                                    </button>
-                                    @if (article.Savings.IsNullOrEmpty())
+                                    @if (!article.IsSaved)
                                     {
-                                        <p class="m-0">0</p>
-                                    } else{
-                                        <p class="m-0">@article.Savings.Count</p>
+                                        <button class="d-block" type="submit" statusSave="not-saved">
+                                            <img src="~/media/not-saved.png" secondSave="/media/saved.png" alt="">
+                                        </button>
                                     }
+                                    else
+                                    {
+                                        <button class="d-block" type="submit" statusSave="saved">
+                                            <img src="~/media/saved.png" secondSave="/media/not-saved.png" alt="">
+                                        </button>
+                                    }
+
+                                    <p class="m-0">@article.SavingsCount</p>
+
                                 </div>
                                 <div class="comments">
                                     <button class="d-block" type="submit">
@@ -66,8 +70,9 @@
                                     {
                                         <p class="m-0">0</p>
                                     }
-                                    else{
-                                        <p class="m-0">@article.Comments</p>
+                                    else
+                                    {
+                                        <p class="m-0">@article.Comments.Count</p>
                                     }
                                 </div>
                                 <div class="download">
@@ -85,33 +90,29 @@
                                 <button class="sender-comment">Send</button>
                             </div>
                             <div class="comments-list">
-                                @if (article.Comments != null){
-                                @foreach(var comment in article.Comments){
-                                <div class="comment pb-1" targetComment="@comment.Id">
+                                @if (article.Comments != null)
+                                {
+                                    @foreach (var comment in article.Comments)
+                                    {
+                                        <div class="comment pb-1 d-flex justify-content-between" targetComment="@comment.Id">
+                                            <div>
 
-                                    <div class="author-comment d-flex justify-content-start align-items-center">
+                                                <div class="author-comment d-flex justify-content-start align-items-center">
 
-                                        <img class="d-block" src="~/media/ava.jpg" alt="avatar">
-                                        <p class="m-0">Name Surname</p>
-                                    </div>
-                                    <div>
-                                        Comment
-                                    </div>
-                                </div>
+                                                    <img class="d-block" src="~/media/ava.jpg" alt="avatar">
+                                                    <p class="m-0">@comment.User.Name @comment.User.Surname</p>
+                                                </div>
+                                                <div>
+                                                    @comment.Text
+                                                </div>
+                                            </div>
+                                            
+                                            <button class="delete-button">Delete</button>
+                                            
+                                        </div>
+                                    }
                                 }
-                                }
 
-                                <div class="comment pb-1">
-
-                                    <div class="author-comment d-flex justify-content-start align-items-center">
-
-                                        <img class="d-block" src="~/media/ava.jpg" alt="avatar">
-                                        <p class="m-0">Name Surname</p>
-                                    </div>
-                                    <div>
-                                        Comment
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -123,26 +124,42 @@
             }
         </div>
         <div class="articles-filters">
-            <form asp-controller="Articles" asp-action="ApplyFilters" method="GET">
+            <form asp-controller="Articles" asp-action="Index" method="GET">
                 <div>
                     <label>
-                        @Html.EditorFor(model => model.FilterInput.Search, 
-                            new { htmlAttributes = new { @placelolder="Search", style="Width:100px" } })
+                        @Html.EditorFor(model => model.FilterInput.Search,
+                        new { htmlAttributes = new { @placelolder="Search", style="Width:100px", name="search" } })
                     </label>
                 </div>
                 <div>
-                    <label asp-for="@Model.FilterInput.Sort"></label>
-                    <select asp-for="@Model.FilterInput.Sort"
-                            asp-items="@(new SelectList(Model.Filter.Sort, nameof(Model.Filter.Sort)))">
+                    <label asp-for="@Model.FilterInput.Sort">Type of sorting</label>
+                    <select asp-for="@Model.FilterInput.Sort">
+                        @foreach (var sortType in Model.Filter.Sort)
+                        {
+                            <option value=@sortType name="sortType">@sortType</option>
+                        }
+                    </select>
+                    <label asp-for="@Model.FilterInput.SortOrder">Order of sorting</label>
+                    <select asp-for="@Model.FilterInput.SortOrder">
+                        @foreach (var sortType in Model.Filter.SortOrder)
+                        {
+                            <option value=@sortType name="sortType">@sortType</option>
+                        }
                     </select>
                 </div>
                 <div>
-                    <label asp-for="@Model.FilterInput.Category"></label>
+                    @*<label asp-for="@Model.FilterInput.Category"></label>
                     <select asp-for="@Model.FilterInput.Category"
-                            asp-items="@(new SelectList(Model.Filter.Categories, nameof(Model.Filter.Categories)))">
+                    asp-items="@(new SelectList(Model.Filter.Categories, nameof(Model.Filter.Categories)))">
+                    </select>*@
+                    <select asp-for="@Model.FilterInput.Category">
+                        @foreach (var category in Model.Filter.Categories)
+                        {
+                            <option value=@category.Id name="category">@category.Name</option>
+                        }
                     </select>
                 </div>
-                <button asp-action="ApplyFilters" type="submit">Apply</button>
+                <button asp-action="Index" type="submit">Apply</button>
             </form>
         </div>
     </div>

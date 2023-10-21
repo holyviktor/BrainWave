@@ -157,3 +157,7 @@ button {
 .side-panel {
     width: 20%;
 }
+
+.main-padding{
+    padding-bottom: 200px;
+}

@@ -17,9 +17,9 @@ namespace BrainWave.Core.Entities
         public string Text { get; set; }
         public User User { get; set; }
         public Category Category { get; set; }
-        public ICollection<Like>? Likes { get; set; }
+        public ICollection<Like> Likes { get; set; }
         public ICollection<Comment>? Comments { get; set; }
-        public ICollection<Saving>? Savings { get; set; }
+        public ICollection<Saving> Savings { get; set; }
         public ICollection<Complaint>? Complaints { get; set; }
     }
 }

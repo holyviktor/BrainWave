@@ -6,6 +6,7 @@ namespace BrainWave.WebUI.Models
     {
         public string? Search { get; set; }
         public string? Sort { get; set; }
+        public string? SortOrder { get; set; }
         public int? Category { get; set; }
     }
 }

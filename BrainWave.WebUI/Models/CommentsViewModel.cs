@@ -4,9 +4,8 @@ namespace BrainWave.WebUI.Models
 {
     public class CommentsViewModel
     {
-        public List<CommentViewModel>? Comments { get; set; }
+        public CommentViewModel Comment { get; set; }
         public int CommentsCount { get; set; }
-        public bool Status { get; set; }
 
     }
 }
