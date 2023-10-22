@@ -1,0 +1,30 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization;
+@inject IViewLocalizer _localizer;
+<div class="side-panel">
+    <div>
+        <a asp-controller="Profile" asp-action="Index">@_localizer["Profile"]</a>
+    </div>
+    <div>
+        <a asp-controller="Profile" asp-action="Edit">@_localizer["Edit"]</a>
+    </div>
+    <div>
+        <a asp-controller="Articles" asp-action="Create">@_localizer["CreatePost"]</a>
+    </div>
+    <div>
+        <a href="">@_localizer["Articles"]</a>
+    </div>
+    <div>
+        <a href="">@_localizer["Liked"]</a>
+    </div>
+    <div>
+        <a href="">@_localizer["Saved"]</a>
+    </div>
+    <div>
+        <a href="">@_localizer["Wallet"]</a>
+    </div>
+    <div>
+        <button>
+            @_localizer["Exit"]
+        </button>
+    </div>
+</div>

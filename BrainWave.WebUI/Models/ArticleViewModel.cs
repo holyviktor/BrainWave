@@ -9,6 +9,7 @@ namespace BrainWave.WebUI.Models
         public string Title { get; set; }
         public string CategoryName { get; set; }
         [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:ddd, dd MMM yyyy}")]
         public DateTime Date { get; set; }
         public double Price { get; set; }
         public string Text { get; set; }

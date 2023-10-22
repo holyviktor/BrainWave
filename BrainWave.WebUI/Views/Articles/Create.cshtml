@@ -1,0 +1,52 @@
+﻿@model ArticleInputViewModel
+
+
+<form method="POST">
+    <div class="container">
+        <div class="d-flex justify-content-start">
+            @{
+                await Html.RenderPartialAsync("_ProfileSidePanel");
+            }
+
+            <div class="profile">
+                <div>
+                    <label>
+                        Title
+                        @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger d-block" })
+                        @Html.EditorFor(m=>m.Title)
+                    </label>
+                </div>
+
+                <div>
+                    <label>
+                        Category
+                        @Html.ValidationMessageFor(model => model.CategoryId, "", new { @class = "text-danger d-block" })
+                        <select asp-for="@Model.CategoryId">
+                            @foreach (var category in ViewBag.Categories)
+                            {
+                                <option value=@category.Id name="category">@category.Name</option>
+                            }
+                        </select>
+                    </label>
+                </div>
+                <div>
+                    <label>
+                        Price
+                        @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger d-block" })
+                        @Html.EditorFor(m=>m.Price)
+                    </label>
+                </div>
+                <div>
+                    <label>
+                        Text
+
+                        @Html.ValidationMessageFor(model => model.Text, "", new { @class = "text-danger d-block" })
+                        @Html.TextAreaFor(m=>m.Text)
+                    </label>
+
+                </div>
+                <button type="submit">Create</button>
+            </div>
+        </div>
+    </div>
+</form>  

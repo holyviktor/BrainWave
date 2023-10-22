@@ -2,12 +2,9 @@
 using BrainWave.Core.Entities;
 using BrainWave.Infrastructure.Data;
 using BrainWave.WebUI.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
-using System.ComponentModel.DataAnnotations;
 
 namespace BrainWave.WebUI.Controllers
 {
@@ -26,7 +23,6 @@ namespace BrainWave.WebUI.Controllers
             _filtersService = new FiltersService(dbContext);
         }
 
-        // GET: ArticlesController
         public ActionResult Index(ArticlesViewModel? articlesViewModel)
         {
             List<Article> articles;
@@ -45,18 +41,12 @@ namespace BrainWave.WebUI.Controllers
                 articles = _dbContext.Articles
                     .Include(c => c.Comments)
                     .Include(c => c.User)
-                    .Include(c => c.Likes)
-                    .Include(c => c.Savings)
                     .ToList();
             }
             int userId = 2;
-            List<ArticleViewModel> articleViewModels = new List<ArticleViewModel>();
+            List<ArticleViewModel> articleViewModels = new();
             var user = _dbContext.Users.Find(userId);
-            bool isAuthorised = false;
-            if (user != null)
-            {
-                isAuthorised = true;
-            }
+            bool isAuthorised = user != null;
             foreach (Article article in articles)
             {
                 var isLiked = _dbContext.Likes.Where(x => x.ArticleId == article.Id).FirstOrDefault(x => x.UserId == userId) != null;
@@ -71,11 +61,11 @@ namespace BrainWave.WebUI.Controllers
                     Price = article.Price,
                     Text = article.Text,
                     User = article.User,
-                    LikesCount = article.Likes.Count,
-                    IsLiked = isAuthorised? isLiked: false,
+                    LikesCount = _dbContext.Likes.Count(x=>x.ArticleId == article.Id),
+                    IsLiked = isAuthorised && isLiked,
                     Comments = article.Comments,
-                    SavingsCount = article.Savings.Count,
-                    IsSaved = isAuthorised ? isSaved: false,
+                    SavingsCount = _dbContext.Savings.Count(x=>x.ArticleId == article.Id),
+                    IsSaved = isAuthorised && isSaved,
                 });
 
             }
@@ -85,36 +75,28 @@ namespace BrainWave.WebUI.Controllers
                 Filter = filterViewModel,
                 IsUserAuthorised = isAuthorised
             };
-            Console.WriteLine(articlesViewModel);
-
             return View(articlesViewModel);
         }
 
         public ActionResult Create()
         {
             var categories = _dbContext.Categories.ToList();
-            /*ViewBag.Categories = new SelectList { 
-                Text = categories.Select(m => m.Name),
-
-            };*/
-
             ViewBag.Categories = categories;
-            /* (categories, "Id", "Name");*/
-            Console.WriteLine(ViewBag.Categories);
             return View();
         }
         [HttpPost]
         public IActionResult Create(ArticleInputViewModel articleInputViewModel)
         {
-            Console.WriteLine(articleInputViewModel.CategoryId);
             if (!ModelState.IsValid)
             {
-                throw new ArgumentException();
+                var categories = _dbContext.Categories.ToList();
+                ViewBag.Categories = categories;
+                return View("Create");
             }
             var userId = 2;
             var authorisedUser = _dbContext.Users.Find(userId);
             var categorySearched = _dbContext.Categories.FirstOrDefault(m => m.Id == articleInputViewModel.CategoryId);
-            if (categorySearched != null)
+            if (categorySearched != null && authorisedUser !=null)
             {
                 var articleNew = new Article
                 {
@@ -128,6 +110,11 @@ namespace BrainWave.WebUI.Controllers
                 _dbContext.Add(articleNew);
                 _dbContext.SaveChanges();
             }
+            else
+            {
+                throw new ArgumentException();
+            }
+            
             return RedirectToAction("Index", "Profile");
         }
     }
