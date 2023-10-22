@@ -7,49 +7,84 @@
 <div class="container">
 
     <div class="d-flex justify-content-start">
-            <div class="side-panel">
-                <div>
-                    <a href="">@_localizer["Edit"]</a>
-                </div>
-                <div>
-                    <a href="">@_localizer["Articles"]</a>
-                </div>
-                <div>
-                    <a href="">@_localizer["Liked"]</a>
-                </div>
-                <div>
-                    <a href="">@_localizer["Saved"]</a>
-                </div>
-                <div>
-                    <a href="">@_localizer["Wallet"]</a>
-                </div>
-                <div>
-                    <button>
-                        @_localizer["Exit"]
-                    </button>
-                </div>
-            </div>
+        @{
+            await Html.RenderPartialAsync("_ProfileSidePanel");
+        }
         <div class="profile">
-            <form>
+            <form method="POST">
                 <div>
                     <h1>Profile editing</h1>
                     <div class="d-flex justify-content-between">
                         <div class="author-article d-flex justify-content-start align-items-center">
-                            <img class="d-block" src="@Model.Photo" alt="avatar">
-                            <input type="text" value="@Model.Name @Model.Surname" />
+                            <div class="profile-pic">
+                                <label class="-label" for="myFile">
+                                    <span>
+                                        Change photo
+                                    </span>
+                                </label>
+                                <input type="file" id="myFile" name="photoName" accept="image/*" class="input-file" />
+                                <img src="~/media/@Model.Photo" alt="photo" id="output" />
+                            </div>
+                            <div>
+                                <div>
+                                    @Html.ValidationMessageFor(model => model.Photo, "", new { @class = "text-danger" })
+                                </div>
+                                <div>
+                                    @Html.EditorFor(m=>m.Photo)
+                                </div>
+                            </div>
+                            <div>
+                                <div>
+                                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                                </div>
+                                <div>
+                                    @Html.EditorFor(m=>m.Name)
+                                </div>
+                            </div>
+                            <div>
+                                <div>
+                                    @Html.ValidationMessageFor(model => model.Surname, "", new { @class = "text-danger" })
+                                </div>
+                                <div>
+                                    @Html.EditorFor(m=>m.Surname)
+                                </div>
+                            </div>
                         </div>
 
                     </div>
                 </div>
                 <div>
-
-                    <input value="@Model.Description" />
-                    <input value="@Model.Password" />
+                    <div>
+                        <div>
+                            @Html.ValidationMessageFor(model => model.Tag, "", new { @class = "text-danger" })
+                        </div>
+                        <div>
+                            @Html.EditorFor(m=>m.Tag)
+                        </div>
+                    </div>
+                    <div>
+                        <div>
+                            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                        </div>
+                        <div>
+                            @Html.EditorFor(m=>m.Description)
+                        </div>
+                    </div>
+                    <div>
+                        <div>
+                            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                        </div>
+                        <div>
+                            @Html.EditorFor(m=>m.Password)
+                        </div>
+                    </div>
                 </div>
                 <div>
-                    <button type="submit">Save changes</button>
+                    <button type="submit" asp-action="EditUser">Save changes</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<script src="~/js/EditPhoto.js" asp-append-version="true"></script>

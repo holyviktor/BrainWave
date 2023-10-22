@@ -1,13 +1,8 @@
 ﻿using BrainWave.Core.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BrainWave.Core.Interfaces
 {
-    public interface InteractionsInterface
+    public interface IInteractionsInterface
     {
         public bool EditLike(bool status, int idArticle, int idUser);
         public bool EditSaving(bool status, int idArticle, int idUser);

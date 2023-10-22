@@ -7,7 +7,7 @@ using System.Web.Http;
 
 namespace BrainWave.Application.Services
 {
-    public class InteractionsService:InteractionsInterface
+    public class InteractionsService:IInteractionsInterface
     {
         private readonly BrainWaveDbContext _dbContext;
         public InteractionsService(BrainWaveDbContext dbContext)
