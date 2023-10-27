@@ -1,8 +1,10 @@
 ﻿using System.Net;
 using System.Net.Mail;
 using System.Text.Json;
+using AutoMapper;
 /*using System.Web.Http;*/
 using BrainWave.Application.Services;
+using BrainWave.Core.DTOs;
 using BrainWave.Core.Entities;
 using BrainWave.Infrastructure.Data;
 using BrainWave.WebUI.Models;
@@ -17,11 +19,13 @@ namespace BrainWave.WebUI.Controllers
     {
         private readonly BrainWaveDbContext _dbContext;
         private readonly InteractionsService _interactionsService;
+        private readonly IMapper _mapper;
 
-        public InteractionsController(BrainWaveDbContext dbContext)
+        public InteractionsController(BrainWaveDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
             _interactionsService = new InteractionsService(dbContext);
+            _mapper = mapper;
         }
 
         [HttpPatch ("/articles/likes")]
@@ -32,7 +36,7 @@ namespace BrainWave.WebUI.Controllers
                 throw new InvalidOperationException("input is not valid.");
             }
             var userId = 2;
-            var statusSuccess = _interactionsService.EditLike(interactionsViewModel.Status, interactionsViewModel.ArticleId, userId);
+            var statusSuccess = _interactionsService.EditLike(new LikesSavingsDTO(interactionsViewModel.Status, interactionsViewModel.ArticleId, userId));
             if (!statusSuccess) {
                 throw new System.Web.Http.HttpResponseException(HttpStatusCode.NotFound);
             }
@@ -52,7 +56,7 @@ namespace BrainWave.WebUI.Controllers
                 throw new InvalidOperationException("input is not valid.");
             }
             var userId = 2;
-            var statusSuccess = _interactionsService.EditSaving(interactionsViewModel.Status, interactionsViewModel.ArticleId, userId);
+            var statusSuccess = _interactionsService.EditSaving(new LikesSavingsDTO(interactionsViewModel.Status, interactionsViewModel.ArticleId, userId));
             if (!statusSuccess)
             {
                 throw new System.Web.Http.HttpResponseException(HttpStatusCode.NotFound);
@@ -81,25 +85,16 @@ namespace BrainWave.WebUI.Controllers
             {
                 throw new InvalidOperationException("not authorised");
             }
-            var comment = _interactionsService.AddComment(commentViewModel.ArticleId, userId, commentViewModel.Comment);
-            var commentsAll = _dbContext.Comments.Where(m => m.ArticleId == commentViewModel.ArticleId).OrderBy(m=>m.Date).ToList();
-                      
-            var user = new UserViewModel {
-                Id= userId,
-                Name = authorisedUser.Name,
-                Surname= authorisedUser.Surname,
-                Photo = authorisedUser.Photo,
-            };
+            var comment = _interactionsService.AddComment(new AddCommentDTO(commentViewModel.ArticleId, userId, commentViewModel.Comment));
+            var user = _mapper.Map<UserViewModel>(authorisedUser);
 
-            var commentViewModelNew = new CommentViewModel
+            var addedComment = new CommentViewModel
             {
                 Id = comment.Id,
                 Text = comment.Text,
                 User = user
             };
-            
-
-            return commentViewModelNew;
+            return addedComment;
         }
 
         [HttpDelete ("/articles/comment/delete")]
@@ -115,7 +110,7 @@ namespace BrainWave.WebUI.Controllers
             {
                 throw new InvalidOperationException("not authorised");
             }
-            var statusSuccess = _interactionsService.DeleteComment(commentViewModel.ArticleId, userId, commentViewModel.CommentId);
+            var statusSuccess = _interactionsService.DeleteComment(new DeleteCommentDTO(commentViewModel.ArticleId, userId, commentViewModel.CommentId));
             if (!statusSuccess)
             {
                 throw new System.Web.Http.HttpResponseException(HttpStatusCode.NotFound);

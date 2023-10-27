@@ -1,11 +1,13 @@
 using BrainWave.Infrastructure;
 using BrainWave.Infrastructure.Data;
 using BrainWave.WebUI.Middlewares;
+using BrainWave.WebUI.Models.Mapping;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.Globalization;
+using System.Reflection;
 using System.Text.Json.Serialization;
 using System.Web.Http;
 
@@ -30,6 +32,7 @@ builder.Services.Configure<RequestLocalizationOptions>(options => {
 
 builder.Services.AddStorage(builder.Configuration);
 
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 
 var app = builder.Build();

@@ -1,4 +1,5 @@
-﻿using BrainWave.Core.Entities;
+﻿using AutoMapper;
+using BrainWave.Core.Entities;
 using BrainWave.Infrastructure.Data;
 using BrainWave.WebUI.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -9,45 +10,45 @@ namespace BrainWave.WebUI.Controllers
     public class ProfileController : Controller
     {
         private readonly BrainWaveDbContext _dbContext;
+        private readonly IMapper _mapper;
 
-        public ProfileController(BrainWaveDbContext dbContext)
+        public ProfileController(BrainWaveDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
+            _mapper = mapper;
         }
         public ActionResult Index()
         {
             var userId = 2;
             var user = _dbContext.Users.Find(userId);
             ProfileViewModel profileViewModel;
-            if (user != null) {
-                var articles = _dbContext.Articles.Where(x => x.UserId == user.Id)
+            if (user != null)
+            {
+                var articles = _dbContext.Articles
+                    .Where(x => x.UserId == user.Id)
                     .Include(c => c.Comments)
-                    .Include(c => c.Category)
-                    .Include(c => c.User).ToList();
+                    .Include(c => c.User)
+                    .OrderByDescending(x => x.Date).ToList()
+                    .Select(c => new
+                    {
+                        Article = c,
+                        LikesCount = c.Likes?.Count(),
+                        SavingsCount = c.Savings?.Count(),
+                        IsLiked = c.Likes?.Any(like => like.UserId == userId),
+                        IsSaved = c.Savings?.Any(saving => saving.UserId == userId)
+                    });
                 var followers = _dbContext.Followings.Count(x => x.FollowingUserId == user.Id);
                 var followings = _dbContext.Followings.Count(x => x.UserId == user.Id);
                 List<ArticleViewModel> articleViewModels = new();
-                foreach (Article article in articles)
+                foreach (var article in articles)
                 {
-                    var isLiked = _dbContext.Likes.Where(x => x.ArticleId == article.Id).FirstOrDefault(x => x.UserId == userId) != null;
-                    var isSaved = _dbContext.Savings.Where(x => x.ArticleId == article.Id).FirstOrDefault(x => x.UserId == userId) != null;
-
-                    articleViewModels.Add(new ArticleViewModel
-                    {
-                        Id = article.Id,
-                        Title = article.Title,
-                        CategoryName = article.Category.Name,
-                        Date = article.Date,
-                        Price = article.Price,
-                        Text = article.Text,
-                        User = article.User,
-                        LikesCount = _dbContext.Likes.Count(x=>x.ArticleId == article.Id),
-                        IsLiked = isLiked,
-                        Comments = article.Comments,
-                        SavingsCount = _dbContext.Savings.Count(x=>x.ArticleId == article.Id),
-                        IsSaved = isSaved,
-                    });
-
+                    var articleViewModel = _mapper.Map<ArticleViewModel>(article.Article);
+                    articleViewModel.LikesCount = article.LikesCount ?? 0;
+                    articleViewModel.IsLiked = article.IsLiked ?? false;
+                    articleViewModel.Comments = article.Article.Comments?.OrderByDescending(c => c.Date).ToList();
+                    articleViewModel.SavingsCount = article.SavingsCount ?? 0;
+                    articleViewModel.IsSaved = article.IsSaved ?? false;
+                    articleViewModels.Add(articleViewModel);
                 }
                 profileViewModel = new ProfileViewModel
                 {
@@ -61,7 +62,7 @@ namespace BrainWave.WebUI.Controllers
             {
                 throw new ArgumentException();
             }
-            
+
             return View(profileViewModel);
         }
 
@@ -73,39 +74,22 @@ namespace BrainWave.WebUI.Controllers
             {
                 return NotFound();
             }
-            ProfileInputViewModel profileInputViewModel = new ProfileInputViewModel
-            {
-                Name = user.Name,
-                Surname= user.Surname,
-                Tag= user.Tag,
-                Description = user.Description,
-                Photo = user.Photo,
-                Password = user.Password,
-
-            };
+            ProfileInputViewModel profileInputViewModel = _mapper.Map<ProfileInputViewModel>(user);
             return View(profileInputViewModel);
         }
         [HttpPost]
         public IActionResult EditUser(ProfileInputViewModel profileInputViewModel)
         {
-            Console.WriteLine( "here");
+            Console.WriteLine("here");
             var userId = 2;
             var user = _dbContext.Users.Find(userId);
-            if (user == null) { 
+            if (user == null)
+            {
                 throw new ArgumentException();
             }
             if (!ModelState.IsValid)
             {
-                ProfileInputViewModel profileModel = new ProfileInputViewModel
-                {
-                    Name = user.Name,
-                    Surname = user.Surname,
-                    Tag = user.Tag,
-                    Description = user.Description,
-                    Photo = user.Photo,
-                    Password = user.Password,
-
-                };
+                ProfileInputViewModel profileModel = _mapper.Map<ProfileInputViewModel>(user);
                 return View("Edit", profileModel);
             }
             else

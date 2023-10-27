@@ -1,10 +1,12 @@
-﻿using BrainWave.Application.Services;
+﻿using AutoMapper;
+using BrainWave.Application.Services;
 using BrainWave.Core.Entities;
 using BrainWave.Infrastructure.Data;
 using BrainWave.WebUI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
+using System.Xml.Linq;
 
 namespace BrainWave.WebUI.Controllers
 {
@@ -14,13 +16,15 @@ namespace BrainWave.WebUI.Controllers
         private readonly BrainWaveDbContext _dbContext;
         private readonly IStringLocalizer<ArticlesController> _stringLocalizer;
         private readonly FiltersService _filtersService;
+        private readonly IMapper _mapper;
 
-        public ArticlesController(ILogger<ArticlesController> logger, BrainWaveDbContext dbContext, IStringLocalizer<ArticlesController> stringLocalizer)
+        public ArticlesController(ILogger<ArticlesController> logger, BrainWaveDbContext dbContext, IStringLocalizer<ArticlesController> stringLocalizer, IMapper mapper)
         {
             _logger = logger;
             _dbContext = dbContext;
             _stringLocalizer = stringLocalizer;
             _filtersService = new FiltersService(dbContext);
+            _mapper = mapper;
         }
 
         public ActionResult Index(ArticlesViewModel? articlesViewModel)
@@ -30,6 +34,10 @@ namespace BrainWave.WebUI.Controllers
             {
                 Categories = _dbContext.Categories.ToList(),
             };
+            int userId = 2;
+            List<ArticleViewModel> articleViewModels = new();
+            var user = _dbContext.Users.Find(userId);
+            bool isAuthorised = user != null;
 
             if (articlesViewModel != null && articlesViewModel.FilterInput != null)
             {
@@ -41,32 +49,23 @@ namespace BrainWave.WebUI.Controllers
                 articles = _dbContext.Articles
                     .Include(c => c.Comments)
                     .Include(c => c.User)
+                    .Include(c=>c.Likes)
+                    .Include(c=>c.Savings)
                     .ToList();
             }
-            int userId = 2;
-            List<ArticleViewModel> articleViewModels = new();
-            var user = _dbContext.Users.Find(userId);
-            bool isAuthorised = user != null;
+            
             foreach (Article article in articles)
             {
-                var isLiked = _dbContext.Likes.Where(x => x.ArticleId == article.Id).FirstOrDefault(x => x.UserId == userId) != null;
-                var isSaved = _dbContext.Savings.Where(x => x.ArticleId == article.Id).FirstOrDefault(x => x.UserId == userId) != null;
+                var isLiked = article.Likes.Any(x => x.UserId == userId);
+                var isSaved = article.Savings.Any(x => x.UserId == userId);
 
-                articleViewModels.Add(new ArticleViewModel
-                {
-                    Id = article.Id,
-                    Title = article.Title,
-                    CategoryName = article.Category.Name,
-                    Date = article.Date,
-                    Price = article.Price,
-                    Text = article.Text,
-                    User = article.User,
-                    LikesCount = _dbContext.Likes.Count(x=>x.ArticleId == article.Id),
-                    IsLiked = isAuthorised && isLiked,
-                    Comments = article.Comments,
-                    SavingsCount = _dbContext.Savings.Count(x=>x.ArticleId == article.Id),
-                    IsSaved = isAuthorised && isSaved,
-                });
+                var articleViewModel = _mapper.Map<ArticleViewModel>(article);
+                articleViewModel.LikesCount = article.Likes.Count(x => x.ArticleId == article.Id);
+                articleViewModel.IsLiked = isAuthorised && isLiked;
+                articleViewModel.Comments = article.Comments?.OrderByDescending(c => c.Date).ToList();
+                articleViewModel.SavingsCount = article.Savings.Count(x => x.ArticleId == article.Id);
+                articleViewModel.IsSaved = isAuthorised && isSaved;
+                articleViewModels.Add(articleViewModel);
 
             }
             articlesViewModel = new ArticlesViewModel
@@ -98,15 +97,9 @@ namespace BrainWave.WebUI.Controllers
             var categorySearched = _dbContext.Categories.FirstOrDefault(m => m.Id == articleInputViewModel.CategoryId);
             if (categorySearched != null && authorisedUser !=null)
             {
-                var articleNew = new Article
-                {
-                    Title = articleInputViewModel.Title,
-                    Text = articleInputViewModel.Text,
-                    CategoryId = articleInputViewModel.CategoryId,
-                    Price = articleInputViewModel.Price,
-                    UserId = userId,
-                    Date = DateTime.Now,
-                };
+                var articleNew = _mapper.Map<Article>(articleInputViewModel);
+                articleNew.Date = DateTime.Now;
+                articleNew.UserId= userId;
                 _dbContext.Add(articleNew);
                 _dbContext.SaveChanges();
             }

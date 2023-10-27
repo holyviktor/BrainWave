@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BrainWave.Core.Interfaces
 {
-    public interface IFilterInterface
+    public interface IFiltersService
     {
         public IQueryable<Article> Search(IQueryable<Article> articles, string searchParam);
         public IQueryable<Article> Filter(IQueryable<Article> articles, int categoryId);

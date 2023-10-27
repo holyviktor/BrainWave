@@ -11,7 +11,7 @@ using BrainWave.Core.Interfaces;
 
 namespace BrainWave.Application.Services
 {
-    public class FiltersService:IFilterInterface
+    public class FiltersService:IFiltersService
     {
         private readonly BrainWaveDbContext _dbContext;
         public FiltersService(BrainWaveDbContext dbContext)
@@ -21,8 +21,7 @@ namespace BrainWave.Application.Services
 
         public List<Article> ApplyFilters(string search, int? categoryId, string? sortType, string sortOrder)
         {
-            var articles = from s in _dbContext.Articles
-                           select s;
+            var articles = _dbContext.Articles.AsQueryable();
             if (!search.IsNullOrEmpty())
             {
                 articles = Search(articles, search);
@@ -70,7 +69,7 @@ namespace BrainWave.Application.Services
         }
         public IQueryable<Article> Sort(IQueryable<Article> articles, string orderType, string orderMode)
         {
-            if (orderMode != null && orderType != null) {
+            if (!orderMode.IsNullOrEmpty() && !orderType.IsNullOrEmpty()) {
                 string sortOrder = orderType + "_" + orderMode;
                 switch (sortOrder)
                 {
@@ -102,6 +101,10 @@ namespace BrainWave.Application.Services
                         articles = articles.OrderBy(m => m.Date);
                         break;
                 }
+            }
+            else
+            {
+                throw new ArgumentException();
             }
             return articles;
         }
