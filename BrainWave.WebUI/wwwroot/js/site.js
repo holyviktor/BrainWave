@@ -15,11 +15,11 @@ articles.forEach(article => {
     const commentSection = article.querySelector('.comments-list') 
     const id = article.getAttribute("target")
 
-    const commentPattern = (comment, avatar = "/media/ava.jpg", name = "Name Surname") => `<div class="comment d-flex justify-content-between pb-1" targetComment="${comment.id}">
+    const commentPattern = (comment, avatar, name) => `<div class="comment d-flex justify-content-between pb-1" targetComment="${comment.id}">
                                     <div>
                                     <div class="author-comment d-flex justify-content-start align-items-center">
 
-                                        <img class="d-block" src="${avatar}" alt="avatar">
+                                        <img class="d-block" src="/media/${avatar}" alt="avatar">
                                         <p class="m-0">${name}</p>
                                     </div>
                                     <div>
@@ -40,7 +40,10 @@ articles.forEach(article => {
                 commentSection.innerHTML = commentPattern({
                     text: commentInput.value,
                     id: response.id
-                }) + commentSection.innerHTML
+                },
+                    avatar = response.user.photo,
+                    name = response.user.name + ' ' + response.user.surname
+                ) + commentSection.innerHTML
                 commentInput.value = ""
             })
     })

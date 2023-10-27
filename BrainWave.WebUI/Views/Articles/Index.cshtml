@@ -14,7 +14,7 @@
             {
                 @foreach (var article in Model.Articles)
                 {
-                    <input type="hidden" id="@article.Id" />
+                    <input type="hidden" id="@article.Id"/>
                     <div class="article pb-3" target="@article.Id">
                         <h2>@article.Title</h2>
                         <div class="author-article d-flex justify-content-start align-items-center">
@@ -23,6 +23,7 @@
                         </div>
                         <p>@article.Date</p>
                         <p>@article.CategoryName</p>
+                        <p>Price: @article.Price</p>
                         <div>
                             @article.Text
                         </div>
@@ -106,9 +107,9 @@
                                                     @comment.Text
                                                 </div>
                                             </div>
-                                            
+
                                             <button class="delete-button">Delete</button>
-                                            
+
                                         </div>
                                     }
                                 }
@@ -126,20 +127,22 @@
         <div class="articles-filters">
             <form asp-controller="Articles" asp-action="Index" method="GET">
                 <div>
-                    <label>
-                        @Html.EditorFor(model => model.FilterInput.Search,
-                        new { htmlAttributes = new { @placelolder="Search", style="Width:100px", name="search" } })
-                    </label>
+                    <label asp-for="@Model.FilterInput.Search">@_localizer["Search"]</label>
+                    @Html.EditorFor(model => model.FilterInput.Search,
+                        new { htmlAttributes = new { @placelolder = "Search", style = "Width:100px", name = "search" } })
+
                 </div>
                 <div>
-                    <label asp-for="@Model.FilterInput.Sort">Type of sorting</label>
+                    <label asp-for="@Model.FilterInput.Sort">@_localizer["TypeSorting"]</label>
                     <select asp-for="@Model.FilterInput.Sort">
                         @foreach (var sortType in Model.Filter.Sort)
                         {
                             <option value=@sortType name="sortType">@sortType</option>
                         }
                     </select>
-                    <label asp-for="@Model.FilterInput.SortOrder">Order of sorting</label>
+                </div>
+                <div>
+                    <label asp-for="@Model.FilterInput.SortOrder">@_localizer["OrderSorting"]</label>
                     <select asp-for="@Model.FilterInput.SortOrder">
                         @foreach (var sortType in Model.Filter.SortOrder)
                         {
@@ -148,10 +151,7 @@
                     </select>
                 </div>
                 <div>
-                    @*<label asp-for="@Model.FilterInput.Category"></label>
-                    <select asp-for="@Model.FilterInput.Category"
-                    asp-items="@(new SelectList(Model.Filter.Categories, nameof(Model.Filter.Categories)))">
-                    </select>*@
+                    <label asp-for="@Model.FilterInput.Category">@_localizer["Category"]</label>
                     <select asp-for="@Model.FilterInput.Category">
                         @foreach (var category in Model.Filter.Categories)
                         {
@@ -159,7 +159,7 @@
                         }
                     </select>
                 </div>
-                <button asp-action="Index" type="submit">Apply</button>
+                <button asp-action="Index" type="submit">@_localizer["Apply"]</button>
             </form>
         </div>
     </div>

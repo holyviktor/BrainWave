@@ -117,22 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Apply" xml:space="preserve">
-    <value>Застосувати</value>
-  </data>
-  <data name="ArticlesTitle" xml:space="preserve">
-    <value>Публікації</value>
-  </data>
-  <data name="Category" xml:space="preserve">
-    <value>Категорія</value>
-  </data>
-  <data name="OrderSorting" xml:space="preserve">
-    <value>Порядок сортування</value>
-  </data>
-  <data name="Search" xml:space="preserve">
-    <value>Пошук</value>
-  </data>
-  <data name="TypeSorting" xml:space="preserve">
-    <value>Тип сортування</value>
+  <data name="Greeting" xml:space="preserve">
+    <value>This is a place for researchers, scientists, and everyone interested in scientific discoveries and innovations. Here you can find and share the latest research, meet colleagues and get feedback on your work.</value>
   </data>
 </root>
