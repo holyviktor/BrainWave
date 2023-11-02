@@ -2,6 +2,7 @@
 using BrainWave.Core.Entities;
 using BrainWave.Infrastructure.Data;
 using BrainWave.WebUI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,6 +18,7 @@ namespace BrainWave.WebUI.Controllers
             _dbContext = dbContext;
             _mapper = mapper;
         }
+        [Authorize]
         public ActionResult Index()
         {
             var userId = 2;
@@ -65,7 +67,7 @@ namespace BrainWave.WebUI.Controllers
 
             return View(profileViewModel);
         }
-
+        [Authorize]
         public ActionResult Edit()
         {
             var userId = 2;
@@ -78,6 +80,7 @@ namespace BrainWave.WebUI.Controllers
             return View(profileInputViewModel);
         }
         [HttpPost]
+        [Authorize]
         public IActionResult EditUser(ProfileInputViewModel profileInputViewModel)
         {
             Console.WriteLine("here");
@@ -104,6 +107,11 @@ namespace BrainWave.WebUI.Controllers
                 _dbContext.SaveChanges();
             }
             return RedirectToAction("Index", "Profile");
+        }
+        [Authorize]
+        public IActionResult Logout()
+        {
+            return SignOut("Cookies", "oidc");
         }
     }
 }

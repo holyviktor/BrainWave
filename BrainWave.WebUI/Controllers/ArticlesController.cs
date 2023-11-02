@@ -3,6 +3,7 @@ using BrainWave.Application.Services;
 using BrainWave.Core.Entities;
 using BrainWave.Infrastructure.Data;
 using BrainWave.WebUI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
@@ -76,7 +77,7 @@ namespace BrainWave.WebUI.Controllers
             };
             return View(articlesViewModel);
         }
-
+        [Authorize]
         public ActionResult Create()
         {
             var categories = _dbContext.Categories.ToList();
@@ -84,6 +85,7 @@ namespace BrainWave.WebUI.Controllers
             return View();
         }
         [HttpPost]
+        [Authorize]
         public IActionResult Create(ArticleInputViewModel articleInputViewModel)
         {
             if (!ModelState.IsValid)
