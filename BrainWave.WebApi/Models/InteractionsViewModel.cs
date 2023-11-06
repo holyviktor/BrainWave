@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BrainWave.WebUI.Models;
+namespace IdentityApi.Models;
 
 public class InteractionsViewModel
 {

@@ -1,4 +1,6 @@
-﻿using Duende.IdentityServer.Models;
+﻿using System.Security.Claims;
+using Duende.IdentityServer;
+using Duende.IdentityServer.Models;
 
 namespace IdentityServer;
 
@@ -11,11 +13,26 @@ public static class Config
             new IdentityResources.Profile(),
         };
 
+
+    public static IEnumerable<ApiResource> ApiResources =>
+        new ApiResource[]
+        {
+            new ApiResource()
+            {
+                Name = "api1",
+                DisplayName = "BrainWave Api",
+                ApiSecrets = { new Secret("api1_secret".Sha256()) },
+                Scopes = new List<string>() { "api1" },
+                UserClaims = { ClaimTypes.Name, ClaimTypes.Email, ClaimTypes.NameIdentifier, ClaimTypes.GivenName },
+            }
+        };
+
     public static IEnumerable<ApiScope> ApiScopes =>
         new ApiScope[]
         {
             new ApiScope("scope1"),
             new ApiScope("scope2"),
+            new ApiScope("api1"),
         };
 
     public static IEnumerable<Client> Clients =>
@@ -23,12 +40,13 @@ public static class Config
         {
             new Client
             {
-                ClientId = "client",
+                ClientId = "api1",
                 ClientSecrets = { new Secret("secret".Sha256()) },
 
                 AllowedGrantTypes = GrantTypes.ClientCredentials,
                 // scopes that client has access to
-                AllowedScopes = { "api1" }
+                AllowedScopes = { "api1" },
+                AlwaysIncludeUserClaimsInIdToken = true
             },
             new Client
             {
@@ -43,7 +61,12 @@ public static class Config
                 
                 RequirePkce = true,
                 AllowOfflineAccess = true,
-                AllowedScopes = { "openid", "profile", "api1" }
+                AllowedScopes = new List<string>
+                {
+                    IdentityServerConstants.StandardScopes.OpenId,
+                    IdentityServerConstants.StandardScopes.Profile,
+                },
+                AlwaysIncludeUserClaimsInIdToken = true
             },
         };
 }

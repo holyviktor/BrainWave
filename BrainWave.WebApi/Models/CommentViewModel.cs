@@ -1,4 +1,4 @@
-﻿namespace BrainWave.WebUI.Models
+﻿namespace IdentityApi.Models
 {
     public class CommentViewModel
     {

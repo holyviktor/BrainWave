@@ -21,9 +21,17 @@
                     </div>
                     <div class="profile-info d-flex justify-content-between">
                         <div class="posts">
+                            @if (Model.User.Articles is not null)
+                            {
+                                <p>
+                                    @Model.User.Articles.Count()
+                                </p>
+                            }else
+                            {
                             <p>
-                                @Model.User.Articles.Count()
+                                0
                             </p>
+                            }
                             <p>
                                 @_localizer["Posts"]
                             </p>

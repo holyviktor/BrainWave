@@ -42,8 +42,8 @@ internal static class HostingExtensions
             })
             .AddConfigurationStore(options =>
             {
-                options.ConfigureDbContext = builder =>
-                builder.UseSqlServer(connectionString,
+                options.ConfigureDbContext = b =>
+                b.UseSqlServer(connectionString,
                 sql => sql.MigrationsAssembly(migrationsAssembly));
             })
             .AddOperationalStore(options =>
@@ -119,6 +119,15 @@ internal static class HostingExtensions
                 foreach (var resource in Config.ApiScopes)
                 {
                     context.ApiScopes.Add(resource.ToEntity());
+                }
+                context.SaveChanges();
+            }
+            Console.WriteLine("i am here");
+            if (!context.ApiResources.Any())
+            {
+                foreach (var resource in Config.ApiResources)
+                {
+                    context.ApiResources.Add(resource.ToEntity());
                 }
                 context.SaveChanges();
             }

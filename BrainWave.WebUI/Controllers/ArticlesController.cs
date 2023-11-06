@@ -3,10 +3,13 @@ using BrainWave.Application.Services;
 using BrainWave.Core.Entities;
 using BrainWave.Infrastructure.Data;
 using BrainWave.WebUI.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
+using System.Net.Http.Headers;
+using System.Security.Claims;
 using System.Xml.Linq;
 
 namespace BrainWave.WebUI.Controllers
@@ -28,18 +31,23 @@ namespace BrainWave.WebUI.Controllers
             _mapper = mapper;
         }
 
-        public ActionResult Index(ArticlesViewModel? articlesViewModel)
+        public async Task<ActionResult> Index(ArticlesViewModel? articlesViewModel)
         {
+            var accessToken = await HttpContext.GetTokenAsync("access_token") ?? "";
+            HttpContext.Response.Cookies.Append("token", accessToken);
             List<Article> articles;
             FilterViewModel filterViewModel = new FilterViewModel
             {
                 Categories = _dbContext.Categories.ToList(),
             };
-            int userId = 2;
+            var userTag = (HttpContext.User.Identity as ClaimsIdentity)?.FindFirst("Name")?.Value;
+            if (userTag == null)
+            {
+                throw new ArgumentException();
+            }
+            var user = _dbContext.Users.FirstOrDefault(x => x.Tag == userTag);
             List<ArticleViewModel> articleViewModels = new();
-            var user = _dbContext.Users.Find(userId);
             bool isAuthorised = user != null;
-
             if (articlesViewModel != null && articlesViewModel.FilterInput != null)
             {
                 var filters = articlesViewModel.FilterInput;
@@ -57,8 +65,8 @@ namespace BrainWave.WebUI.Controllers
             
             foreach (Article article in articles)
             {
-                var isLiked = article.Likes.Any(x => x.UserId == userId);
-                var isSaved = article.Savings.Any(x => x.UserId == userId);
+                var isLiked = article.Likes.Any(x => x.UserId == user.Id);
+                var isSaved = article.Savings.Any(x => x.UserId == user.Id);
 
                 var articleViewModel = _mapper.Map<ArticleViewModel>(article);
                 articleViewModel.LikesCount = article.Likes.Count(x => x.ArticleId == article.Id);
@@ -94,14 +102,18 @@ namespace BrainWave.WebUI.Controllers
                 ViewBag.Categories = categories;
                 return View("Create");
             }
-            var userId = 2;
-            var authorisedUser = _dbContext.Users.Find(userId);
+            var userTag = (HttpContext.User.Identity as ClaimsIdentity)?.FindFirst("Name")?.Value;
+            if (userTag == null)
+            {
+                throw new ArgumentException();
+            }
+            var authorisedUser = _dbContext.Users.FirstOrDefault(x => x.Tag == userTag);
             var categorySearched = _dbContext.Categories.FirstOrDefault(m => m.Id == articleInputViewModel.CategoryId);
             if (categorySearched != null && authorisedUser !=null)
             {
                 var articleNew = _mapper.Map<Article>(articleInputViewModel);
                 articleNew.Date = DateTime.Now;
-                articleNew.UserId= userId;
+                articleNew.UserId= authorisedUser.Id;
                 _dbContext.Add(articleNew);
                 _dbContext.SaveChanges();
             }

@@ -1,9 +1,16 @@
 ﻿const articleContent = document.querySelector(".articles-content")
 const articles = articleContent.querySelectorAll(".article")
-const likeUrl = "articles/likes"
-const saveUrl = "articles/savings"
-const commentAddUrl = "articles/comment"
-const commentDeleteUrl = "articles/comment/delete"
+const url = "https://localhost:6001/"
+const likeUrl = url + "articles/likes"
+const saveUrl = url + "articles/savings"
+const commentAddUrl = url + "articles/comment"
+const commentDeleteUrl = url + "articles/comment/delete"
+const cookie = document.cookie.split("; ")
+const accessToken = cookie.find(value => value.startsWith('token'))
+let token = ''
+if (accessToken) {
+    token = accessToken.split("=")[1]
+}
 
 
 articles.forEach(article => {
@@ -97,7 +104,8 @@ function addDeleteListeners(commentsContainer, arcticleId, commentAmount) {
 
 async function patchLike(articleId, status) {
     const headers = new Headers({
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
     })
     const result = await fetch(`${likeUrl}`, {
         method: 'PATCH',
@@ -111,7 +119,8 @@ async function patchLike(articleId, status) {
 
 async function patchComment(articleId, comment) {
     const headers = new Headers({
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
     })
     const result = await fetch(`${commentAddUrl}`, {
         method: 'PATCH',
@@ -125,7 +134,8 @@ async function patchComment(articleId, comment) {
 
 async function deleteComment(commentId, articleId) {
     const headers = new Headers({
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
     })
     const result = await fetch(`${commentDeleteUrl}`, {
         method: 'DELETE',
@@ -165,7 +175,8 @@ articles.forEach(article => {
 
 async function patchSave(articleId, status) {
     const headers = new Headers({
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
     })
     const result = await fetch(`${saveUrl}`, {
         method: 'PATCH',

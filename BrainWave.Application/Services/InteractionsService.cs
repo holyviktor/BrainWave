@@ -40,7 +40,7 @@ namespace BrainWave.Application.Services
                         User = authorisedUser,
                         Article = currentArticle
                     };
-                    _dbContext.Add(likeNew);
+                    _dbContext.Likes.Add(likeNew);
                     statusSuccess = true;
                 }
             }
@@ -48,7 +48,7 @@ namespace BrainWave.Application.Services
             {
                 if (currentLike != null)
                 {
-                    _dbContext.Remove(currentLike);
+                    _dbContext.Likes.Remove(currentLike);
                     statusSuccess = true;
                 }
             }
@@ -77,7 +77,7 @@ namespace BrainWave.Application.Services
                             User = authorisedUser,
                             Article = currentArticle
                         };
-                        _dbContext.Add(savingNew);
+                        _dbContext.Savings.Add(savingNew);
                         statusSuccess = true;
                     }
                 }
@@ -85,7 +85,7 @@ namespace BrainWave.Application.Services
                 {
                     if (currentSaving != null)
                     {
-                        _dbContext.Remove(currentSaving);
+                        _dbContext.Savings.Remove(currentSaving);
                         statusSuccess = true;
                     }
                 }
@@ -114,7 +114,7 @@ namespace BrainWave.Application.Services
                     Text = commentDTO.comment,
                     Date = DateTime.Now
                 };
-                _dbContext.Add(commentNew);
+                _dbContext.Comments.Add(commentNew);
                 _dbContext.SaveChanges();
             }
             else
@@ -136,7 +136,7 @@ namespace BrainWave.Application.Services
                     .FirstOrDefault(m => m.UserId == commentDTO.idUser || authorisedUser.Articles.Contains(m.Article));
                 if (currentComment != null)
                 {
-                    _dbContext.Remove(currentComment);
+                    _dbContext.Comments.Remove(currentComment);
                     _dbContext.SaveChanges();
                     statusSuccess = true;
                 }

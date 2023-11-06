@@ -2,9 +2,12 @@
 using BrainWave.Core.Entities;
 using BrainWave.Infrastructure.Data;
 using BrainWave.WebUI.Models;
+using IdentityServer.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace BrainWave.WebUI.Controllers
 {
@@ -19,10 +22,14 @@ namespace BrainWave.WebUI.Controllers
             _mapper = mapper;
         }
         [Authorize]
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            var userId = 2;
-            var user = _dbContext.Users.Find(userId);
+            var userTag = (HttpContext.User.Identity as ClaimsIdentity)?.FindFirst("Name")?.Value;
+            if (userTag == null)
+            {
+                throw new ArgumentException();
+            }
+            var user = _dbContext.Users.FirstOrDefault(x => x.Tag == userTag);
             ProfileViewModel profileViewModel;
             if (user != null)
             {
@@ -36,8 +43,8 @@ namespace BrainWave.WebUI.Controllers
                         Article = c,
                         LikesCount = c.Likes?.Count(),
                         SavingsCount = c.Savings?.Count(),
-                        IsLiked = c.Likes?.Any(like => like.UserId == userId),
-                        IsSaved = c.Savings?.Any(saving => saving.UserId == userId)
+                        IsLiked = c.Likes?.Any(like => like.UserId == user.Id),
+                        IsSaved = c.Savings?.Any(saving => saving.UserId == user.Id)
                     });
                 var followers = _dbContext.Followings.Count(x => x.FollowingUserId == user.Id);
                 var followings = _dbContext.Followings.Count(x => x.UserId == user.Id);
@@ -70,8 +77,12 @@ namespace BrainWave.WebUI.Controllers
         [Authorize]
         public ActionResult Edit()
         {
-            var userId = 2;
-            var user = _dbContext.Users.Find(userId);
+            var userTag = (HttpContext.User.Identity as ClaimsIdentity)?.FindFirst("Name")?.Value;
+            if (userTag == null)
+            {
+                throw new ArgumentException();
+            }
+            var user = _dbContext.Users.FirstOrDefault(x => x.Tag == userTag);
             if (user == null)
             {
                 return NotFound();
@@ -83,9 +94,12 @@ namespace BrainWave.WebUI.Controllers
         [Authorize]
         public IActionResult EditUser(ProfileInputViewModel profileInputViewModel)
         {
-            Console.WriteLine("here");
-            var userId = 2;
-            var user = _dbContext.Users.Find(userId);
+            var userTag = (HttpContext.User.Identity as ClaimsIdentity)?.FindFirst("Name")?.Value;
+            if (userTag == null)
+            {
+                throw new ArgumentException();
+            }
+            var user = _dbContext.Users.FirstOrDefault(x => x.Tag == userTag);
             if (user == null)
             {
                 throw new ArgumentException();

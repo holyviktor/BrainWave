@@ -11,9 +11,6 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using System.Reflection;
-using System.Text.Json.Serialization;
-using System.Web.Http;
-using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -59,7 +56,7 @@ builder.Services.AddAuthentication(options =>
         options.Scope.Clear();
         options.Scope.Add("openid");
         options.Scope.Add("profile");
-        /*options.Scope.Add("api1");*/
+        options.Scope.Add("api1");
         options.GetClaimsFromUserInfoEndpoint = true;
 
         options.UsePkce = true;
@@ -67,7 +64,6 @@ builder.Services.AddAuthentication(options =>
 
         options.Scope.Add(OpenIdConnectScope.OpenId);
         options.Scope.Add(OpenIdConnectScope.OfflineAccess);
-
     });
 
 
