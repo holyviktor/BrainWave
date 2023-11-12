@@ -4,6 +4,7 @@ using BrainWave.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BrainWave.Infrastructure.Migrations
 {
     [DbContext(typeof(BrainWaveDbContext))]
-    partial class BrainWaveDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231104193253_MessengerMigration")]
+    partial class MessengerMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -92,7 +95,7 @@ namespace BrainWave.Infrastructure.Migrations
                     b.Property<DateTime>("Date")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 11, 11, 11, 37, 21, 932, DateTimeKind.Utc).AddTicks(592));
+                        .HasDefaultValue(new DateTime(2023, 11, 4, 19, 32, 53, 288, DateTimeKind.Utc).AddTicks(7106));
 
                     b.Property<string>("Text")
                         .IsRequired()
@@ -156,6 +159,10 @@ namespace BrainWave.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()

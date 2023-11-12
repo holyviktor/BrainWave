@@ -14,8 +14,8 @@ namespace BrainWave.Infrastructure.Data
 
         public BrainWaveDbContext() { }
 
-        public DbSet<Article> Articles { get; set; }
-        public DbSet<Category> Categories { get;set; }
+        public virtual DbSet<Article> Articles { get; set; }
+        public virtual DbSet<Category> Categories { get;set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Following> Followings { get; set; }
         public DbSet<Like> Likes { get; set; }
@@ -25,6 +25,9 @@ namespace BrainWave.Infrastructure.Data
         public DbSet<Complaint> Complaints { get; set; }
         public DbSet<StatusComplaint> StatusComplaints { get; set; }
         public DbSet<ReasonComplaint> ReasonComplaints { get; set; }
+        public DbSet<Message> Messages { get; set; }
+        public DbSet<Conversation> Conversations { get; set; }
+        public DbSet<Participant> Participants { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

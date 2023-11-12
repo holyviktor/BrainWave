@@ -18,12 +18,14 @@ namespace BrainWave.Core.Entities
         public string Photo { get; set; }
         public string Description { get; set; }
         public Role Role { get; set; }
-        public ICollection<Article>? Articles { get; set; }
-        public ICollection<Like>? Likes { get; set; }
-        public ICollection<Comment>? Comments { get; set; }
-        public ICollection<Saving>? Savings { get; set; }
+        public ICollection<Article> Articles { get; set; }
+        public ICollection<Like> Likes { get; set; }
+        public ICollection<Comment> Comments { get; set; }
+        public ICollection<Saving> Savings { get; set; }
         public ICollection<Following>? Followings { get; set; }
         public ICollection<Complaint>? Complaints { get; set; }
+        public ICollection<Message> Messages { get; set; }
+        public ICollection<Participant> Participants { get; set; }
 
     }
 }

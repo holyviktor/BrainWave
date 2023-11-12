@@ -4,6 +4,7 @@ using BrainWave.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,13 +12,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BrainWave.Infrastructure.Migrations
 {
     [DbContext(typeof(BrainWaveDbContext))]
-    partial class BrainWaveDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231013120210_Complaints")]
+    partial class Complaints
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.13")
+                .HasAnnotation("ProductVersion", "7.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -92,7 +95,7 @@ namespace BrainWave.Infrastructure.Migrations
                     b.Property<DateTime>("Date")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 11, 11, 11, 37, 21, 932, DateTimeKind.Utc).AddTicks(592));
+                        .HasDefaultValue(new DateTime(2023, 10, 13, 12, 2, 10, 361, DateTimeKind.Utc).AddTicks(8479));
 
                     b.Property<string>("Text")
                         .IsRequired()
@@ -149,27 +152,6 @@ namespace BrainWave.Infrastructure.Migrations
                     b.ToTable("Complaints");
                 });
 
-            modelBuilder.Entity("BrainWave.Core.Entities.Conversation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Photo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Conversations");
-                });
-
             modelBuilder.Entity("BrainWave.Core.Entities.Following", b =>
                 {
                     b.Property<int>("Id")
@@ -214,59 +196,6 @@ namespace BrainWave.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Likes");
-                });
-
-            modelBuilder.Entity("BrainWave.Core.Entities.Message", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ConversationId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("DateTimeCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ConversationId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Messages");
-                });
-
-            modelBuilder.Entity("BrainWave.Core.Entities.Participant", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ConversationId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ConversationId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Participants");
                 });
 
             modelBuilder.Entity("BrainWave.Core.Entities.ReasonComplaint", b =>
@@ -507,44 +436,6 @@ namespace BrainWave.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("BrainWave.Core.Entities.Message", b =>
-                {
-                    b.HasOne("BrainWave.Core.Entities.Conversation", "Conversation")
-                        .WithMany("Messages")
-                        .HasForeignKey("ConversationId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("BrainWave.Core.Entities.User", "User")
-                        .WithMany("Messages")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Conversation");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("BrainWave.Core.Entities.Participant", b =>
-                {
-                    b.HasOne("BrainWave.Core.Entities.Conversation", "Conversation")
-                        .WithMany("Participants")
-                        .HasForeignKey("ConversationId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("BrainWave.Core.Entities.User", "User")
-                        .WithMany("Participants")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Conversation");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("BrainWave.Core.Entities.Saving", b =>
                 {
                     b.HasOne("BrainWave.Core.Entities.Article", "Article")
@@ -591,13 +482,6 @@ namespace BrainWave.Infrastructure.Migrations
                     b.Navigation("Articles");
                 });
 
-            modelBuilder.Entity("BrainWave.Core.Entities.Conversation", b =>
-                {
-                    b.Navigation("Messages");
-
-                    b.Navigation("Participants");
-                });
-
             modelBuilder.Entity("BrainWave.Core.Entities.ReasonComplaint", b =>
                 {
                     b.Navigation("Complaints");
@@ -624,10 +508,6 @@ namespace BrainWave.Infrastructure.Migrations
                     b.Navigation("Followings");
 
                     b.Navigation("Likes");
-
-                    b.Navigation("Messages");
-
-                    b.Navigation("Participants");
 
                     b.Navigation("Savings");
                 });
