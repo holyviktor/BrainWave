@@ -120,6 +120,9 @@
   <data name="Articles" xml:space="preserve">
     <value>My articles</value>
   </data>
+  <data name="Conversations" xml:space="preserve">
+    <value>Conversations</value>
+  </data>
   <data name="CreatePost" xml:space="preserve">
     <value>Create article</value>
   </data>

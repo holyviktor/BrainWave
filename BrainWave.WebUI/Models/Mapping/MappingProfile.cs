@@ -10,6 +10,7 @@ namespace BrainWave.WebUI.Models.Mapping
             this.CreateMap<Article, ArticleViewModel>();
             this.CreateMap<ArticleInputViewModel, Article>();
             this.CreateMap<User, ProfileInputViewModel>();
+            this.CreateMap<Message, MessageViewModel>();
         }
     }
 }

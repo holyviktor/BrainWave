@@ -1,16 +1,13 @@
 using BrainWave.Infrastructure;
-using BrainWave.Infrastructure.Data;
 using BrainWave.WebUI.Middlewares;
-using BrainWave.WebUI.Models.Mapping;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using System.Globalization;
+using System.Globalization;  
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using System.Reflection;
+using BrainWave.WebUI.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +15,7 @@ builder.Services.AddLocalization(options => options.ResourcesPath = "Resources")
 builder.Services.AddControllersWithViews().AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
     .AddDataAnnotationsLocalization();
 builder.Services.AddRazorPages();
+builder.Services.AddSignalR();
 
 const string defaultCulture = "en";
 var supportedCultures = new[]
@@ -101,5 +99,7 @@ app.UseEndpoints(endpoints =>
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapHub<ChatHub>("/chatHub");
 
 app.Run();

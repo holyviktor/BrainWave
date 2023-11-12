@@ -1,0 +1,42 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization;
+@model IEnumerable<ConversationsViewModel>
+@inject IViewLocalizer _localizer;
+@{
+    ViewData["Title"] = "Conversations";
+}
+<section class="container">
+    <div>
+        <a asp-controller="Conversations" asp-action="Create">Create conversation</a>
+    </div>
+    <div>
+        @foreach (var conversation in Model)
+        {
+            <div class="pb-2">
+                <div class="author-article d-flex justify-content-start align-items-center">
+                    <img class="d-block" src="~/media/ava.jpg" alt="conversation">
+                    <div>
+                        <a href="@Url.Action("Conversation", "Conversations", new { conversationId = conversation.Id})">
+                            <h3>@conversation.Name</h3>
+                        </a>
+                    </div>
+                </div>
+                @if (conversation.Message != null)
+                {
+                    <div class="author-article d-flex justify-content-start align-items-center">
+                        <img class="d-block" src="~/media/ava.jpg" alt="conversation">
+                        <a href="@Url.Action("Index", "Users", new { tag = @conversation.Message.User.Tag})">
+                            <p>@conversation.Message.User.Name @conversation.Message.User.Surname</p>
+                        </a>
+                    </div>
+
+                    <p>@conversation.Message.Text</p>
+                    <p>@conversation.Message.DateTimeCreated</p>
+                }
+                else
+                {
+                    <p>"This conversation has no messages."</p>
+                }
+            </div>
+        }
+    </div>
+</section>

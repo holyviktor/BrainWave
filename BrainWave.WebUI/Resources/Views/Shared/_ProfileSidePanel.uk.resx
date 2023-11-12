@@ -120,6 +120,9 @@
   <data name="Articles" xml:space="preserve">
     <value>Мої публікації</value>
   </data>
+  <data name="Conversations" xml:space="preserve">
+    <value>Бесіди</value>
+  </data>
   <data name="CreatePost" xml:space="preserve">
     <value>Створити публікацію</value>
   </data>
