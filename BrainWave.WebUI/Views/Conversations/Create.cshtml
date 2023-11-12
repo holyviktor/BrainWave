@@ -1,0 +1,40 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization;
+@model ConversationInputViewModel;
+@inject IViewLocalizer _localizer;
+@{
+    ViewData["Title"] = "Create Conversations";
+}
+<div class="container">
+    <form method="POST">
+        <div>
+            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+        </div>
+        <div>
+            <label for="name">
+                Name
+            </label>
+            <input type="text" name="name" placeholder="Name" asp-for="@Model.Name" />
+        </div>
+        <div>
+            @Html.ValidationMessageFor(model => model.Photo, "", new { @class = "text-danger" })
+        </div>
+        <div>
+            <input type="file" placeholder="" asp-for="@Model.Photo" />
+        </div>
+        <div>
+            @Html.ValidationMessageFor(model => model.Participants, "", new { @class = "text-danger" })
+        </div>
+        <div>
+            <label for="participants">
+                Select participants
+            </label>
+            <select name="participants" id="participants" multiple>
+                @for (int i = 0; i < ViewBag.Users.Count; i++)
+                {
+                    <option asp-for="Participants" value="@ViewBag.Users[i].FollowingUser.Id">@ViewBag.Users[i].FollowingUser.Name @ViewBag.Users[i].FollowingUser.Surname</option>
+                }
+            </select>
+        </div>
+        <button type="submit">Create</button>
+    </form>
+</div>

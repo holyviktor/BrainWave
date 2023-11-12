@@ -1,0 +1,63 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization;
+@model ConversationViewModel
+@inject IViewLocalizer _localizer;
+@{
+    ViewData["Title"] = "Conversations";
+}
+
+<section class="container">
+    <div>
+        <div class="author-article d-flex justify-content-start align-items-center">
+            <img class="d-block" src="~/media/ava.jpg" alt="avatar">
+            <div>
+                <h2>@Model.Name</h2>
+                <p>Participants: @Model.ParticipantsCount</p>
+            </div>
+        </div>
+    </div>
+    <div class="row p-1">
+        <div class="col-6">
+            <ul id="messagesList">
+                @foreach (var message in Model.Messages)
+                {
+                    <li class="pb-1">
+                        <div class="author-article d-flex justify-content-start align-items-center">
+                            <img class="d-block" src="~/media/ava.jpg" alt="avatar">
+                            <div>
+                                <a href="@Url.Action("Index", "Users", new { tag = message.User.Tag})">
+                                    @message.User.Name @message.User.Surname
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <p>@message.Text</p>
+                            <p>@message.DateTimeCreated</p>
+                        </div>
+                        
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+    <div class="row p-1">
+        <div class="col-5">
+            <input type="hidden" id="userInput" value="@Model.User.Id"/>
+         </div>
+        <div class="col-5">
+            <input type="hidden" id="conversationInput" value="@Model.Id" />
+        </div>
+    </div>
+    <div class="row p-1">
+        <div class="col-1">Message</div>
+        <div class="col-5"><input type="text" class="w-100" id="messageInput" /></div>
+    </div>
+    <div class="row p-1">
+        <div class="col-6 text-end">
+            <input type="button" id="sendButton" value="Send Message" />
+        </div>
+    </div>
+    
+</section>
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/chat.js"></script>
