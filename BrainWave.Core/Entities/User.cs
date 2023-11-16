@@ -17,6 +17,7 @@ namespace BrainWave.Core.Entities
         public string Surname { get; set; }
         public string Photo { get; set; }
         public string Description { get; set; }
+        public Double EarnedMoney { get; set; }
         public Role Role { get; set; }
         public ICollection<Article> Articles { get; set; }
         public ICollection<Like> Likes { get; set; }
@@ -26,6 +27,7 @@ namespace BrainWave.Core.Entities
         public ICollection<Complaint>? Complaints { get; set; }
         public ICollection<Message> Messages { get; set; }
         public ICollection<Participant> Participants { get; set; }
+        public ICollection<Payment> Payments { get; set; }
 
     }
 }

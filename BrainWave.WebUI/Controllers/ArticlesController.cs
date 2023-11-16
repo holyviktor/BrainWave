@@ -8,9 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
-using System.Net.Http.Headers;
 using System.Security.Claims;
-using System.Xml.Linq;
 
 namespace BrainWave.WebUI.Controllers
 {
@@ -57,6 +55,7 @@ namespace BrainWave.WebUI.Controllers
             {
                 articles = _dbContext.Articles
                     .Include(c => c.Comments)
+                    .ThenInclude(c=>c.User)
                     .Include(c => c.User)
                     .Include(c=>c.Likes)
                     .Include(c=>c.Savings)
@@ -65,6 +64,11 @@ namespace BrainWave.WebUI.Controllers
             
             foreach (Article article in articles)
             {
+                if (article.Price > 0)
+                {
+                    int offset = Math.Min(100, article.Text.Length);
+                    article.Text = article.Text.Substring(0, offset)+"...";
+                }
                 var isLiked = article.Likes.Any(x => x.UserId == user.Id);
                 var isSaved = article.Savings.Any(x => x.UserId == user.Id);
 

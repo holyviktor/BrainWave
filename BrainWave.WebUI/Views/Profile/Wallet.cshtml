@@ -1,16 +1,15 @@
 ﻿@using Microsoft.AspNetCore.Mvc.Localization;
-@using Microsoft.IdentityModel.Tokens
-@model ArticlesViewModel
 @inject IViewLocalizer _localizer;
+@model ArticlesViewModel
 @{
-    ViewData["Title"] = "Articles";
+    ViewData["Title"] = "Wallet";
 }
-
 <div class="container">
-    <h1>@_localizer["ArticlesTitle"]</h1>
+    <div>@_localizer["Earned"] @ViewBag.EarnedMoney$</div>
+    <h1>@_localizer["Wallet"]</h1>
     <div class="d-flex justify-content-between">
         <div class="articles-content">
-            @if (Model.Articles != null)
+            @if (Model.Articles != null && Model.Articles.Count != 0)
             {
                 @foreach (var article in Model.Articles)
                 {
@@ -31,10 +30,7 @@
                         <div>
                             @article.Text
                         </div>
-                        @if (article.Price != 0)
-                        {
-                            <a a href="@Url.Action("Index", "Payment", new { articleId = @article.Id})">Read more</a>
-                        }
+
                         <div class="interactions">
                             <form class="d-flex justify-content-between" action="">
                                 <div class="likes">
@@ -75,7 +71,7 @@
                                     <button class="d-block" type="submit">
                                         <img src="~/media/comments.png" alt="">
                                     </button>
-                                    @if (article.Comments.IsNullOrEmpty())
+                                    @if (article.Comments == null)
                                     {
                                         <p class="m-0">0</p>
                                     }
@@ -129,46 +125,8 @@
             }
             else
             {
-                <h3>There are no publications</h3>
+                <h3>@_localizer["NoPublications"]</h3>
             }
-        </div>
-        <div class="articles-filters">
-            <form asp-controller="Articles" asp-action="Index" method="GET">
-                <div>
-                    <label asp-for="@Model.FilterInput.Search">@_localizer["Search"]</label>
-                    @Html.EditorFor(model => model.FilterInput.Search,
-                        new { htmlAttributes = new { @placelolder = "Search", style = "Width:100px", name = "search" } })
-
-                </div>
-                <div>
-                    <label asp-for="@Model.FilterInput.Sort">@_localizer["TypeSorting"]</label>
-                    <select asp-for="@Model.FilterInput.Sort">
-                        @foreach (var sortType in Model.Filter.Sort)
-                        {
-                            <option value=@sortType name="sortType">@sortType</option>
-                        }
-                    </select>
-                </div>
-                <div>
-                    <label asp-for="@Model.FilterInput.SortOrder">@_localizer["OrderSorting"]</label>
-                    <select asp-for="@Model.FilterInput.SortOrder">
-                        @foreach (var sortType in Model.Filter.SortOrder)
-                        {
-                            <option value=@sortType name="sortType">@sortType</option>
-                        }
-                    </select>
-                </div>
-                <div>
-                    <label asp-for="@Model.FilterInput.Category">@_localizer["Category"]</label>
-                    <select asp-for="@Model.FilterInput.Category">
-                        @foreach (var category in Model.Filter.Categories)
-                        {
-                            <option value=@category.Id name="category">@category.Name</option>
-                        }
-                    </select>
-                </div>
-                <button asp-action="Index" type="submit">@_localizer["Apply"]</button>
-            </form>
         </div>
     </div>
 </div>
