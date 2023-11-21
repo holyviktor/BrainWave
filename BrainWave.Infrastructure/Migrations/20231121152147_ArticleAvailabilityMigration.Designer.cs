@@ -4,6 +4,7 @@ using BrainWave.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BrainWave.Infrastructure.Migrations
 {
     [DbContext(typeof(BrainWaveDbContext))]
-    partial class BrainWaveDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231121152147_ArticleAvailabilityMigration")]
+    partial class ArticleAvailabilityMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,7 +39,7 @@ namespace BrainWave.Infrastructure.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsAvailable")
+                    b.Property<bool?>("IsAvailable")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(true);
@@ -97,7 +100,7 @@ namespace BrainWave.Infrastructure.Migrations
                     b.Property<DateTime>("Date")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 11, 21, 15, 23, 2, 324, DateTimeKind.Utc).AddTicks(3168));
+                        .HasDefaultValue(new DateTime(2023, 11, 21, 15, 21, 47, 294, DateTimeKind.Utc).AddTicks(8171));
 
                     b.Property<string>("Text")
                         .IsRequired()

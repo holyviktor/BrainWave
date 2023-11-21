@@ -32,7 +32,8 @@ namespace BrainWave.WebUI.Controllers
             {
                 throw new ArgumentException();
             }
-            var article = _dbContext.Articles.Find(articleId);
+            var article = _dbContext.Articles.Where(a=>a.IsAvailable)
+                .Include(a=>a.User).FirstOrDefault(a=>a.Id == articleId);
             if (article == null)
             {
                 return NotFound();
@@ -50,8 +51,10 @@ namespace BrainWave.WebUI.Controllers
             {
                 return RedirectToAction("Wallet", "Profile");
             }
+            int offset = Math.Min(100, article.Text.Length);
+            article.Text = article.Text.Substring(0, offset) + "...";
             var articleView = _mapper.Map<ArticleViewModel>(article);
-            articleView.User = user;
+            articleView.User = article.User;
             return View(articleView);
         }
 
@@ -70,7 +73,7 @@ namespace BrainWave.WebUI.Controllers
             {
                 throw new ArgumentException();
             }
-            var article = _dbContext.Articles.Include(a => a.User).SingleOrDefault(a => a.Id == articleId);
+            var article = _dbContext.Articles.Where(a=>a.IsAvailable).Include(a => a.User).SingleOrDefault(a => a.Id == articleId);
             if (article == null)
             {
                 return NotFound();

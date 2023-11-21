@@ -53,7 +53,7 @@ namespace BrainWave.WebUI.Controllers
             }
             else
             {
-                articles = _dbContext.Articles
+                articles = _dbContext.Articles.Where(a=>a.IsAvailable)
                     .Include(c => c.Comments)
                     .ThenInclude(c=>c.User)
                     .Include(c => c.User)

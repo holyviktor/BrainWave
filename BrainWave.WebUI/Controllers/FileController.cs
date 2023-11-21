@@ -17,7 +17,7 @@ namespace BrainWave.WebUI.Controllers
         }
         public ActionResult Index(int id)
         {
-            var article = _dbContext.Articles.Find(id);
+            var article = _dbContext.Articles.Where(a=>a.IsAvailable).SingleOrDefault(a=>a.Id ==id);
             if (article == null)
             {
                 throw new InvalidOperationException();

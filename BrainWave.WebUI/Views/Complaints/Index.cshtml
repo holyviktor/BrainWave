@@ -1,0 +1,12 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization;
+@model List<ComplaintViewModel>
+@inject IViewLocalizer _localizer;
+@{
+    ViewData["Title"] = "Complaints";
+}
+<div class="container">
+    @foreach (var complaint in @Model)
+    {
+        <div>@complaint.Text</div>
+    }
+</div>

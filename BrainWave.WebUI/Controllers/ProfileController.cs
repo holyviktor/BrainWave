@@ -10,6 +10,7 @@ using System.Security.Claims;
 
 namespace BrainWave.WebUI.Controllers
 {
+    [Authorize]
     public class ProfileController : Controller
     {
         private readonly BrainWaveDbContext _dbContext;
@@ -21,7 +22,6 @@ namespace BrainWave.WebUI.Controllers
             _mapper = mapper;
         }
 
-        [Authorize]
         public async Task<ActionResult> Index()
         {
             var accessToken = await HttpContext.GetTokenAsync("access_token") ?? "";
@@ -38,6 +38,7 @@ namespace BrainWave.WebUI.Controllers
             {
                 var articles = _dbContext.Articles
                     .Where(x => x.UserId == user.Id)
+                    .Where(a => a.IsAvailable)
                     .Include(c => c.Comments)
                     .ThenInclude(c => c.User)
                     .Include(c => c.User)
@@ -80,7 +81,6 @@ namespace BrainWave.WebUI.Controllers
             return View(profileViewModel);
         }
 
-        [Authorize]
         public ActionResult Edit()
         {
             var userTag = (HttpContext.User.Identity as ClaimsIdentity)?.FindFirst("Name")?.Value;
@@ -100,7 +100,6 @@ namespace BrainWave.WebUI.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         public IActionResult EditUser(ProfileInputViewModel profileInputViewModel)
         {
             var userTag = (HttpContext.User.Identity as ClaimsIdentity)?.FindFirst("Name")?.Value;
@@ -132,7 +131,6 @@ namespace BrainWave.WebUI.Controllers
             return RedirectToAction("Index", "Profile");
         }
 
-        [Authorize]
         public IActionResult Logout()
         {
             return SignOut("Cookies", "oidc");
@@ -162,6 +160,7 @@ namespace BrainWave.WebUI.Controllers
                 .ThenInclude(a => a.Likes)
                 .Include(l => l.Article)
                 .ThenInclude(a => a.Savings)
+                .Where(l => l.Article.IsAvailable)
                 .Where(l => l.UserId == user.Id);
             List<ArticleViewModel> articleViewModels = new();
             foreach (var like in likes)
@@ -210,6 +209,7 @@ namespace BrainWave.WebUI.Controllers
                 .ThenInclude(a => a.Likes)
                 .Include(l => l.Article)
                 .ThenInclude(a => a.Savings)
+                .Where(l => l.Article.IsAvailable)
                 .Where(l => l.UserId == user.Id);
             List<ArticleViewModel> articleViewModels = new();
             foreach (var saving in savings)
@@ -234,7 +234,6 @@ namespace BrainWave.WebUI.Controllers
             return View(articleViewModels);
         }
 
-        [Authorize]
         public async Task<ActionResult> Wallet()
         {
             var accessToken = await HttpContext.GetTokenAsync("access_token") ?? "";
@@ -287,6 +286,29 @@ namespace BrainWave.WebUI.Controllers
             };
             ViewBag.EarnedMoney = user.EarnedMoney;
             return View(articlesViewModel);
+        }
+
+        public ActionResult Complaints()
+        {
+            var userTag = (HttpContext.User.Identity as ClaimsIdentity)?.FindFirst("Name")?.Value;
+            if (userTag == null)
+            {
+                throw new ArgumentException();
+            }
+
+            var user = _dbContext.Users.FirstOrDefault(x => x.Tag == userTag);
+            if (user == null)
+            {
+                throw new ArgumentException();
+            }
+            var complaints = _dbContext.Complaints
+                .Where(c => c.UserId == user.Id)
+                .Include(c=>c.Reason)
+                .Include(c=>c.Status)
+                .Include(c => c.Article)
+                .ToList();
+            var complaintsView = _mapper.Map<List<ComplaintViewModel>>(complaints);
+            return View(complaintsView);
         }
     }
 }
