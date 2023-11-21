@@ -84,11 +84,19 @@
                                         <p class="m-0">@article.Comments.Count</p>
                                     }
                                 </div>
-                                <div class="download">
-                                    <button class="d-block" type="submit">
-                                        <img src="~/media/download.png" alt="">
-                                    </button>
+                                <div class="complaint">
+                                    <a asp-controller="Complaints" asp-action="Create" asp-route-id="@article.Id" class="d-block">
+                                        <img src="~/media/complaint.png" alt="">
+                                    </a>
                                 </div>
+                                @if (article.Price == 0)
+                                {
+                                    <div class="download">
+                                        <a asp-controller="File" asp-action="Index" asp-route-id="@article.Id" class="d-block">
+                                            <img src="~/media/download.png" alt="">
+                                        </a>
+                                    </div>
+                                }
                             </form>
                         </div>
                         <div class="comments-section">
