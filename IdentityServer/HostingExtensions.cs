@@ -20,12 +20,11 @@ internal static class HostingExtensions
     public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
         var migrationsAssembly = typeof(Program).Assembly.GetName().Name;
-        string connectionString = "Server = (localdb)\\mssqllocaldb; Database = BrainWaveIdentity; Trusted_Connection = True; MultipleActiveResultSets = true";
         builder.Services.AddRazorPages();
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-        builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+        builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
 
@@ -43,12 +42,12 @@ internal static class HostingExtensions
             .AddConfigurationStore(options =>
             {
                 options.ConfigureDbContext = b =>
-                b.UseSqlServer(connectionString,
+                b.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionIdentity"),
                 sql => sql.MigrationsAssembly(migrationsAssembly));
             })
             .AddOperationalStore(options =>
             {
-                options.ConfigureDbContext = b => b.UseSqlServer(connectionString,
+                options.ConfigureDbContext = b => b.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionIdentity"),
                 sql => sql.MigrationsAssembly(migrationsAssembly));
                 options.EnableTokenCleanup = true;
                 options.TokenCleanupInterval = 3600;
