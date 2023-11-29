@@ -2,7 +2,9 @@
 using BrainWave.Core.Entities;
 using BrainWave.Infrastructure.Data;
 using BrainWave.WebUI.Models;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -13,10 +15,13 @@ namespace BrainWave.WebUI.Controllers
     {
         private readonly BrainWaveDbContext _dbContext;
         private readonly IMapper _mapper;
-        public ConversationsController(BrainWaveDbContext dbContext, IMapper mapper)
+        private readonly IWebHostEnvironment _appEnvironment;
+        private readonly string FolderPath = "/media/conversations/";
+        public ConversationsController(BrainWaveDbContext dbContext, IMapper mapper, IWebHostEnvironment appEnvironment)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _appEnvironment = appEnvironment;
         }
         public ActionResult Index()
         {
@@ -85,7 +90,7 @@ namespace BrainWave.WebUI.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Create(ConversationInputViewModel conversationInputViewModel)
+        public async Task<IActionResult> Create(ConversationInputViewModel conversationInputViewModel, IFormFile photoFile)
         {
             var userTag = (HttpContext.User.Identity as ClaimsIdentity)?.FindFirst("Name")?.Value;
             if (userTag == null)
@@ -97,27 +102,40 @@ namespace BrainWave.WebUI.Controllers
             {
                 throw new ArgumentException();
             }
-            if (!ModelState.IsValid)
+
+            if (!ModelState.IsValid || photoFile == null)
             {
                 var followings = _dbContext.Followings.Include(x => x.FollowingUser).Where(x => x.UserId == userAuthorised.Id).ToList();
                 ViewBag.Users = followings;
                 return View("Create");
             }
-            
             var conversation = new Conversation
             {
                 Name = conversationInputViewModel.Name,
-                Photo = conversationInputViewModel.Photo,
+                Photo = ""
             };
+            _dbContext.Conversations.Add(conversation);
+            _dbContext.SaveChanges();
+
+            var type = photoFile.FileName.Split('.').Last();
+            var filename = conversation.Id.ToString() + '.' + type;
+            var path = FolderPath + filename;
+            using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
+            {
+                await photoFile.CopyToAsync(fileStream);
+            }
+            conversation.Photo = filename;
+
+
             _dbContext.Participants.Add(new Participant
             {
                 User = userAuthorised,
                 Conversation = conversation
             });
 
-            foreach(var participantId in conversationInputViewModel.Participants)
+            foreach (var participantId in conversationInputViewModel.Participants)
             {
-                var user =_dbContext.Users.Find(participantId);
+                var user = _dbContext.Users.Find(participantId);
                 if (user == null)
                 {
                     throw new InvalidOperationException();
@@ -128,10 +146,10 @@ namespace BrainWave.WebUI.Controllers
                     Conversation = conversation,
                 };
                 _dbContext.Participants.Add(participant);
-                
+
             }
+
             
-            _dbContext.Conversations.Add(conversation);
             _dbContext.SaveChanges();
 
             return RedirectToAction("Index");

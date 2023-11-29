@@ -5,7 +5,7 @@
     ViewData["Title"] = "Create Conversations";
 }
 <div class="container">
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
         <div>
             @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
         </div>
@@ -15,11 +15,14 @@
             </label>
             <input type="text" name="name" placeholder="Name" asp-for="@Model.Name" />
         </div>
-        <div>
-            @Html.ValidationMessageFor(model => model.Photo, "", new { @class = "text-danger" })
-        </div>
-        <div>
-            <input type="file" placeholder="" asp-for="@Model.Photo" />
+        <div class="profile-pic">
+            <label class="-label" for="myFile">
+                <span>
+                    Upload photo
+                </span>
+            </label>
+            <input type="file" id="myFile" name="photoFile" accept="image/*" class="input-file" />
+            <img src="~/media/ava.jpg" alt="photo" id="output" />
         </div>
         <div>
             @Html.ValidationMessageFor(model => model.Participants, "", new { @class = "text-danger" })
@@ -38,3 +41,4 @@
         <button type="submit">Create</button>
     </form>
 </div>
+<script src="~/js/photo.js" asp-append-version="true"></script>

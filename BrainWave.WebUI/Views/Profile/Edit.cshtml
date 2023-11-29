@@ -11,7 +11,7 @@
             await Html.RenderPartialAsync("_ProfileSidePanel");
         }
         <div class="profile">
-            <form method="POST">
+            <form method="POST" enctype="multipart/form-data">
                 <div>
                     <h1>Profile editing</h1>
                     <div class="d-flex justify-content-between">
@@ -23,15 +23,7 @@
                                     </span>
                                 </label>
                                 <input type="file" id="myFile" name="photoName" accept="image/*" class="input-file" />
-                                <img src="~/media/@Model.Photo" alt="photo" id="output" />
-                            </div>
-                            <div>
-                                <div>
-                                    @Html.ValidationMessageFor(model => model.Photo, "", new { @class = "text-danger" })
-                                </div>
-                                <div>
-                                    @Html.EditorFor(m=>m.Photo)
-                                </div>
+                                <img src="~/media/avatars/@Model.Photo" alt="photo" id="output" />
                             </div>
                             <div>
                                 <div>
@@ -56,28 +48,10 @@
                 <div>
                     <div>
                         <div>
-                            @Html.ValidationMessageFor(model => model.Tag, "", new { @class = "text-danger" })
-                        </div>
-                        <div>
-                            @Html.EditorFor(m=>m.Tag)
-                        </div>
-                    </div>
-                    <div>
-                        <div>
                             @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
                         </div>
                         <div>
                             @Html.EditorFor(m=>m.Description)
-                        </div>
-                    </div>
-                    <div>
-                        <div>
-                            @Html.ValidationMessageFor(model => model.Password, "", 
-                                new { @class = "text-danger" })
-                        </div>
-                        <div>
-                            @Html.EditorFor(m=>m.Password, 
-                                new { htmlAttributes = new { type = "password" }} )
                         </div>
                     </div>
                 </div>

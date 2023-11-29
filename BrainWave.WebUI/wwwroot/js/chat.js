@@ -16,7 +16,7 @@ connection.on("ReceiveMessage", function (user, message, name, surname, photo, d
     var li = document.createElement("li");
     document.getElementById("messagesList").appendChild(li);
     li.innerHTML = `<div class="author-article d-flex justify-content-start align-items-center">
-                            <img class="d-block" src="/media/${photo}" alt="avatar">
+                            <img class="d-block" src="/media/avatars/${photo}" alt="avatar">
                             <div>
                                 <a href="/users/${user}">
                                     ${name} ${surname}

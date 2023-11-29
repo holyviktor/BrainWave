@@ -17,7 +17,7 @@
                     <div class="article pb-3" target="@article.Id">
                         <h2>@article.Title</h2>
                         <div class="author-article d-flex justify-content-start align-items-center">
-                            <img class="d-block" src="~/media/ava.jpg" alt="avatar">
+                            <img class="d-block" src="~/media/avatars/@article.User.Photo" alt="avatar">
                             <p>
                                 <a href="@Url.Action("Index", "Users", new { tag = @article.User.Tag})">
                                     @article.User.Name @article.User.Surname
@@ -104,7 +104,7 @@
 
                                                 <div class="author-comment d-flex justify-content-start align-items-center">
 
-                                                    <img class="d-block" src="~/media/ava.jpg" alt="avatar">
+                                                    <img class="d-block" src="~/media/avatars/@comment.User.Photo" alt="avatar">
                                                     <p class="m-0">@comment.User.Name @comment.User.Surname</p>
                                                 </div>
                                                 <div>

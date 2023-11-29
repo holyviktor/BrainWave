@@ -13,7 +13,7 @@
         {
             <div class="pb-2">
                 <div class="author-article d-flex justify-content-start align-items-center">
-                    <img class="d-block" src="~/media/ava.jpg" alt="conversation">
+                    <img class="d-block" src="~/media/conversations/@conversation.Photo" alt="conversation">
                     <div>
                         <a href="@Url.Action("Conversation", "Conversations", new { conversationId = conversation.Id})">
                             <h3>@conversation.Name</h3>
@@ -23,7 +23,7 @@
                 @if (conversation.Message != null)
                 {
                     <div class="author-article d-flex justify-content-start align-items-center">
-                        <img class="d-block" src="~/media/ava.jpg" alt="conversation">
+                        <img class="d-block" src="~/media/avatars/@conversation.Message.User.Photo" alt="conversation">
                         <a href="@Url.Action("Index", "Users", new { tag = @conversation.Message.User.Tag})">
                             <p>@conversation.Message.User.Name @conversation.Message.User.Surname</p>
                         </a>

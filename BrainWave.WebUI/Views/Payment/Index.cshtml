@@ -10,7 +10,7 @@
     <div class="article pb-3" target="@Model.Id">
         <h2>@Model.Title</h2>
         <div class="author-article d-flex justify-content-start align-items-center">
-            <img class="d-block" src="~/media/ava.jpg" alt="avatar">
+            <img class="d-block" src="~/media/avatars/@Model.User.Photo" alt="avatar">
             <p>
                 <a href="@Url.Action("Index", "Users", new { tag = @Model.User.Tag })">
                     @Model.User.Name @Model.User.Surname
