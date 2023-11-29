@@ -63,18 +63,23 @@ namespace BrainWave.WebUI.Controllers
             {
                 throw new InvalidOperationException();
             }
-
-            var complaint = _mapper.Map<Complaint>(complaintInputViewModel);
-            complaint.UserId = user.Id;
-            complaint.StatusId = status.Id;
-                /*new Complaint
+            var articleComplaint = _dbContext.ArticleComplaints.FirstOrDefault(x=>x.ArticleId== complaintInputViewModel.ArticleId);
+            if (articleComplaint == null) {
+                articleComplaint = new ArticleComplaint
+                {
+                    ArticleId = complaintInputViewModel.ArticleId,
+                    StatusId= status.Id,
+                };
+                _dbContext.ArticleComplaints.Add(articleComplaint);
+                _dbContext.SaveChanges();
+            }
+            var complaint = new Complaint
             {
-                ArticleId = complaintInputViewModel.ArticleId,
+                ArticleComplaintId = articleComplaint.Id,
                 ReasonId = complaintInputViewModel.ReasonId,
                 UserId = user.Id,
                 Text = complaintInputViewModel.Text,
-                StatusId = status.Id
-            };*/
+            };
             _dbContext.Complaints.Add(complaint);
             _dbContext.SaveChanges();
             return RedirectToAction("Complaints", "Profile");

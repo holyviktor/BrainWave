@@ -10,6 +10,6 @@ namespace BrainWave.Core.Entities
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public ICollection<Complaint>? Complaints { get; set; }
+        public ICollection<ArticleComplaint>? ArticleComplaints { get; set; }
     }
 }

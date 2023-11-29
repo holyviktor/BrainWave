@@ -13,6 +13,8 @@ namespace BrainWave.WebUI.Models.Mapping
             this.CreateMap<Message, MessageViewModel>();
             this.CreateMap<Complaint, ComplaintViewModel>();
             this.CreateMap<ComplaintInputViewModel, Complaint>();
+            this.CreateMap<ArticleComplaintsViewModel, ArticleComplaint>();
+            this.CreateMap<ArticleComplaint, ArticleComplaintsViewModel>();
         }
     }
 }

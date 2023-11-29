@@ -42,6 +42,8 @@ namespace BrainWave.WebUI.Controllers
                     .Include(c => c.Comments)
                     .ThenInclude(c => c.User)
                     .Include(c => c.User)
+                    .Include(c => c.Likes)
+                    .Include(c => c.Savings)
                     .OrderByDescending(x => x.Date).ToList()
                     .Select(c => new
                     {
@@ -113,19 +115,14 @@ namespace BrainWave.WebUI.Controllers
             {
                 throw new ArgumentException();
             }
-
             if (!ModelState.IsValid)
             {
                 ProfileInputViewModel profileModel = _mapper.Map<ProfileInputViewModel>(user);
                 return View("Edit", profileModel);
             }
-
             user.Name = profileInputViewModel.Name;
             user.Surname = profileInputViewModel.Surname;
-            user.Tag = profileInputViewModel.Tag;
             user.Description = profileInputViewModel.Description;
-            user.Photo = profileInputViewModel.Photo;
-            user.Password = profileInputViewModel.Password;
             _dbContext.Update(user);
             _dbContext.SaveChanges();
             return RedirectToAction("Index", "Profile");
@@ -301,14 +298,20 @@ namespace BrainWave.WebUI.Controllers
             {
                 throw new ArgumentException();
             }
-            var complaints = _dbContext.Complaints
-                .Where(c => c.UserId == user.Id)
-                .Include(c=>c.Reason)
-                .Include(c=>c.Status)
-                .Include(c => c.Article)
+            var articleComplaints = _dbContext.ArticleComplaints
+                
+                .Include(ac => ac.Complaints)
+                .ThenInclude(c=>c.Reason)
+                .Where(ac => ac.Complaints.Any(c => c.UserId == user.Id))
+                .Include(ac => ac.Status)
+                .Include(ac => ac.Article)
                 .ToList();
-            var complaintsView = _mapper.Map<List<ComplaintViewModel>>(complaints);
-            return View(complaintsView);
+            var articleComplaintsView = _mapper.Map<List<ArticleComplaintsViewModel>>(articleComplaints);
+            for (int i=0; i < articleComplaintsView.Count; i++)
+            {
+                articleComplaintsView[i].Complaints = _mapper.Map<List<ComplaintViewModel>>(articleComplaints[i].Complaints);
+            }
+            return View(articleComplaintsView);
         }
     }
 }

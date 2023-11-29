@@ -1,6 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Mvc.Localization;
 @inject IViewLocalizer _localizer;
-@model List<ComplaintViewModel>
+@model List<ArticleComplaintsViewModel>
 @{
     ViewData["Title"] = "Profile";
 }
@@ -12,12 +12,15 @@
         }
 
         <div class="profile">
-            @foreach(var complaint in @Model)
+            @foreach (var articleComplaint in @Model)
             {
-                <p>Article: @complaint.ArticleTitle</p>
-                <p>Text: @complaint.Text</p>
-                <p> @complaint.ReasonName</p>
-                <p> @complaint.StatusName</p>
+                <p>Article: @articleComplaint.ArticleTitle</p>
+                <p> @articleComplaint.StatusName</p>
+                @foreach (var complaint in articleComplaint.Complaints)
+                {
+                    <p>Text: @complaint.Text</p>
+                    <p> @complaint.ReasonName</p>
+                }
             }
         </div>
     </div>

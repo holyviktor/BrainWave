@@ -31,36 +31,44 @@ namespace BrainWave.WebUI.Controllers
         {
             var statuses = _dbContext.StatusComplaints.ToList();
             ViewBag.Statuses = statuses;
-            var complaints = _dbContext.Complaints
+            var articleComplaints = _dbContext.ArticleComplaints
+                .Include(c => c.Complaints)
+                .ThenInclude(c => c.Reason)
                 .Include(c => c.Article)
-                .Include(c => c.Status)
-                .Include(c => c.Reason)
                 .ToList();
-
+            var complaints = _mapper.Map<List<ArticleComplaintsViewModel>>(articleComplaints);
+            for (int i = 0;i<articleComplaints.Count; i++)
+            {
+                complaints[i].Complaints = _mapper.Map<List<ComplaintViewModel>>(articleComplaints[i].Complaints);
+            }
             var complaintsView = new ComplaintsStatusViewModel
             {
-                Complaints = _mapper.Map<List<ComplaintViewModel>>(complaints)
+                ArticleComplaints = complaints
             };
+
             return View(complaintsView);
         }
 
         public IActionResult ChangeStatus(ComplaintsStatusViewModel complaintsStatusViewModel)
         {
-            var complaint = _dbContext.Complaints
-                .Include(c=>c.Article)
-                .FirstOrDefault(c => c.Id == complaintsStatusViewModel.ComplaintId);
-            var status = _dbContext.StatusComplaints.FirstOrDefault(c=>c.Id== complaintsStatusViewModel.StatusId);
-            if (complaint == null || status == null) {
+            var articleComplaint = _dbContext.ArticleComplaints
+                .Include(c => c.Article)
+                .FirstOrDefault(c => c.ArticleId == complaintsStatusViewModel.ArticleComplaintId);
+            var status = _dbContext.StatusComplaints.FirstOrDefault(c => c.Id == complaintsStatusViewModel.StatusId);
+
+            if (articleComplaint == null || status == null)
+            {
                 throw new InvalidOperationException();
             }
             if (status.Id == 2)
             {
-                complaint.Article.IsAvailable = false;
-            }else if (status.Id == 3)
-            {
-                complaint.Article.IsAvailable = true;
+                articleComplaint.Article.IsAvailable = false;
             }
-            complaint.StatusId = status.Id;
+            else if (status.Id == 3)
+            {
+                articleComplaint.Article.IsAvailable = true;
+            }
+            articleComplaint.StatusId = status.Id;
             _dbContext.SaveChanges();
             return RedirectToAction("Complaints");
         }

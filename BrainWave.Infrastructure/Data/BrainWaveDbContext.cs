@@ -29,6 +29,7 @@ namespace BrainWave.Infrastructure.Data
         public DbSet<Conversation> Conversations { get; set; }
         public DbSet<Participant> Participants { get; set; }
         public DbSet<Payment> Payments { get; set; }
+        public DbSet<ArticleComplaint> ArticleComplaints { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
