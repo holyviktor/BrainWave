@@ -128,5 +128,26 @@ namespace BrainWave.WebUI.Controllers
             
             return RedirectToAction("Index", "Profile");
         }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult Delete(int articleId)
+        {
+            var userTag = (HttpContext.User.Identity as ClaimsIdentity)?.FindFirst("Name")?.Value;
+            if (userTag == null)
+            {
+                throw new ArgumentException();
+            }
+            var authorisedUser = _dbContext.Users.FirstOrDefault(x => x.Tag == userTag);
+            var article = _dbContext.Articles.Where(m => m.Id == articleId)
+                .FirstOrDefault(a=>a.UserId == authorisedUser.Id);
+            if (article == null || authorisedUser == null)
+            {
+                throw new InvalidOperationException();
+            }
+            article.IsAvailable = false;
+            _dbContext.SaveChanges();
+            return RedirectToAction("Index", "Profile");
+        }
     }
 }

@@ -16,7 +16,7 @@
                 <h1>@_localizer["Profile"]</h1>
                 <div class="d-flex justify-content-between">
                     <div class="author-article d-flex justify-content-start align-items-center">
-                        <img class="d-block" src="./media/ava.jpg" alt="avatar">
+                        <img class="d-block" src="~/media/avatars/@Model.User.Photo" alt="avatar">
                         <p>@Model.User.Name @Model.User.Surname</p>
                     </div>
                     <div class="profile-info d-flex justify-content-between">
@@ -26,11 +26,12 @@
                                 <p>
                                     @Model.User.Articles.Count()
                                 </p>
-                            }else
+                            }
+                            else
                             {
-                            <p>
-                                0
-                            </p>
+                                <p>
+                                    0
+                                </p>
                             }
                             <p>
                                 @_localizer["Posts"]
@@ -73,11 +74,16 @@
 
                         @foreach (var article in Model.Articles)
                         {
-                            <input type="hidden" id="@article.Id" />
                             <div class="article pb-3" target="@article.Id">
-                                <h2>@article.Title</h2>
+                                <form method="POST" asp-action="Delete" asp-controller="Articles">
+                                    <input type="hidden" name="articleId" value="@article.Id" />
+                                    <div class="d-flex justify-content-between">
+                                        <h2>@article.Title</h2>
+                                        <button type="submit">Delete</button>
+                                    </div>
+                                </form>
                                 <div class="author-article d-flex justify-content-start align-items-center">
-                                    <img class="d-block" src="~/media/ava.jpg" alt="avatar">
+                                    <img class="d-block" src="~/media/avatars/@article.User.Photo" alt="avatar">
                                     <p>@article.User.Name @article.User.Surname</p>
                                 </div>
                                 <p>@article.Date</p>
@@ -158,7 +164,7 @@
 
                                                         <div class="author-comment d-flex justify-content-start align-items-center">
 
-                                                            <img class="d-block" src="~/media/ava.jpg" alt="avatar">
+                                                            <img class="d-block" src="~/media/avatars/@comment.User.Photo" alt="avatar">
                                                             <p class="m-0">@comment.User.Name @comment.User.Surname</p>
                                                         </div>
                                                         <div>
