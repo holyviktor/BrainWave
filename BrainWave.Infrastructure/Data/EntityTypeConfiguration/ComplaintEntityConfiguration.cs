@@ -25,21 +25,15 @@ namespace BrainWave.Infrastructure.Data.EntityTypeConfiguration
                  .OnDelete(DeleteBehavior.NoAction)
                  .IsRequired();
 
-            builder.HasOne(x => x.Article)
+            builder.HasOne(x => x.ArticleComplaint)
                  .WithMany(x => x.Complaints)
-                 .HasForeignKey(x => x.ArticleId)
+                 .HasForeignKey(x => x.ArticleComplaintId)
                  .OnDelete(DeleteBehavior.NoAction)
                  .IsRequired();
 
             builder.HasOne(x => x.Reason)
                  .WithMany(x => x.Complaints)
                  .HasForeignKey(x => x.ReasonId)
-                 .OnDelete(DeleteBehavior.NoAction)
-                 .IsRequired();
-
-            builder.HasOne(x => x.Status)
-                 .WithMany(x => x.Complaints)
-                 .HasForeignKey(x => x.StatusId)
                  .OnDelete(DeleteBehavior.NoAction)
                  .IsRequired();
 

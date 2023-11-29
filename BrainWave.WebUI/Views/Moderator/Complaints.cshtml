@@ -1,5 +1,43 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using Microsoft.AspNetCore.Mvc.Localization;
+@inject IViewLocalizer _localizer;
+@model ComplaintsStatusViewModel
 @{
+    ViewData["Title"] = "Complaints";
 }
+<div class="container">
+
+    <div>
+
+        <div class="profile">
+            @foreach (var articleComplaint in @Model.ArticleComplaints)
+            {
+                <form method="PATCH" asp-action="ChangeStatus" asp-controller="Moderator">
+                    <input type="hidden" asp-for="@Model.ArticleComplaintId" value="@articleComplaint.ArticleId" />
+                    <p>Article: @articleComplaint.ArticleTitle</p>
+                    <select asp-for="@Model.StatusId">
+                        @foreach (var status in ViewBag.Statuses)
+                        {
+                            if (articleComplaint.StatusName == status.Name)
+                            {
+                                <option value=@status.Id name="category" selected>@status.Name</option>
+                            }
+                            else
+                            {
+                                <option value=@status.Id name="category">@status.Name</option>
+                            }
+
+                        }
+                    </select>
+                    @foreach (var complaint in articleComplaint.Complaints)
+                    {
+                        <p>Text: @complaint.Text</p>
+                        <p>Reason: @complaint.ReasonName</p>
+                    }
+
+                    <button type="submit">Change status</button>
+                </form>
+            }
+        </div>
+
+    </div>
+</div>

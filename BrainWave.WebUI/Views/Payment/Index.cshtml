@@ -1,0 +1,38 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization;
+@model ArticleViewModel
+@inject IViewLocalizer _localizer;
+@{
+    ViewData["Title"] = "Payment";
+}
+<div class="container">
+    
+    <input type="hidden" id="@Model.Id"/>
+    <div class="article pb-3" target="@Model.Id">
+        <h2>@Model.Title</h2>
+        <div class="author-article d-flex justify-content-start align-items-center">
+            <img class="d-block" src="~/media/avatars/@Model.User.Photo" alt="avatar">
+            <p>
+                <a href="@Url.Action("Index", "Users", new { tag = @Model.User.Tag })">
+                    @Model.User.Name @Model.User.Surname
+                </a>
+            </p>
+        </div>
+        <p>@Model.Date</p>
+        <p>@Model.CategoryName</p>
+        <p>Price: @Model.Price</p>
+        <div>
+            @Model.Text
+        </div>
+        @if (Model.Price != 0)
+        {
+            <br>
+            <p>To read full text, pay @Model.Price$ for this article</p>
+            <br>
+        }
+        
+    </div>
+    <form method="POST" asp-action="Pay">
+        <input type="hidden" name="articleId" value="@Model.Id"/>
+        <button type="submit"> Pay </button>
+    </form>
+</div>

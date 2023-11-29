@@ -147,4 +147,7 @@
   <data name="Wallet" xml:space="preserve">
     <value>Wallet</value>
   </data>
+  <data name="Complaints" xml:space="preserve">
+    <value>Complaints</value>
+  </data>
 </root>

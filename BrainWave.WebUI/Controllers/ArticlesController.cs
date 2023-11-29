@@ -8,9 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
-using System.Net.Http.Headers;
 using System.Security.Claims;
-using System.Xml.Linq;
 
 namespace BrainWave.WebUI.Controllers
 {
@@ -55,8 +53,9 @@ namespace BrainWave.WebUI.Controllers
             }
             else
             {
-                articles = _dbContext.Articles
+                articles = _dbContext.Articles.Where(a=>a.IsAvailable)
                     .Include(c => c.Comments)
+                    .ThenInclude(c=>c.User)
                     .Include(c => c.User)
                     .Include(c=>c.Likes)
                     .Include(c=>c.Savings)
@@ -65,6 +64,11 @@ namespace BrainWave.WebUI.Controllers
             
             foreach (Article article in articles)
             {
+                if (article.Price > 0)
+                {
+                    int offset = Math.Min(100, article.Text.Length);
+                    article.Text = article.Text.Substring(0, offset)+"...";
+                }
                 var isLiked = article.Likes.Any(x => x.UserId == user.Id);
                 var isSaved = article.Savings.Any(x => x.UserId == user.Id);
 
@@ -122,6 +126,27 @@ namespace BrainWave.WebUI.Controllers
                 throw new ArgumentException();
             }
             
+            return RedirectToAction("Index", "Profile");
+        }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult Delete(int articleId)
+        {
+            var userTag = (HttpContext.User.Identity as ClaimsIdentity)?.FindFirst("Name")?.Value;
+            if (userTag == null)
+            {
+                throw new ArgumentException();
+            }
+            var authorisedUser = _dbContext.Users.FirstOrDefault(x => x.Tag == userTag);
+            var article = _dbContext.Articles.Where(m => m.Id == articleId)
+                .FirstOrDefault(a=>a.UserId == authorisedUser.Id);
+            if (article == null || authorisedUser == null)
+            {
+                throw new InvalidOperationException();
+            }
+            article.IsAvailable = false;
+            _dbContext.SaveChanges();
             return RedirectToAction("Index", "Profile");
         }
     }

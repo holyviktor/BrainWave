@@ -1,0 +1,33 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization;
+@model ComplaintInputViewModel;
+@inject IViewLocalizer _localizer;
+@{
+    ViewData["Title"] = "Complaints";
+}
+
+<div class="container">
+    <form method="POST" asp-action="Add" asp-controller="Complaints">
+        <input type="hidden" asp-for="@Model.ArticleId" value="@ViewBag.Article.Id" />   
+        <div>
+            <label>
+                Title
+                @Html.ValidationMessageFor(model => model.Text, "", new { @class = "text-danger d-block" })
+                @Html.EditorFor(m=>m.Text)
+            </label>
+        </div>
+
+        <div>
+            <label>
+                Reason
+                @Html.ValidationMessageFor(model => model.ReasonId, "", new { @class = "text-danger d-block" })
+                <select asp-for="@Model.ReasonId">
+                    @foreach (var reason in ViewBag.Reasons)
+                    {
+                        <option value=@reason.Id name="category">@reason.Name</option>
+                    }
+                </select>
+            </label>
+        </div>
+        <button type="submit">Create</button>
+    </form>
+</div>

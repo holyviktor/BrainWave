@@ -1,0 +1,27 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization;
+@inject IViewLocalizer _localizer;
+@model List<ArticleComplaintsViewModel>
+@{
+    ViewData["Title"] = "Profile";
+}
+<div class="container">
+
+    <div class="d-flex justify-content-start">
+        @{
+            await Html.RenderPartialAsync("_ProfileSidePanel");
+        }
+
+        <div class="profile">
+            @foreach (var articleComplaint in @Model)
+            {
+                <p>Article: @articleComplaint.ArticleTitle</p>
+                <p> @articleComplaint.StatusName</p>
+                @foreach (var complaint in articleComplaint.Complaints)
+                {
+                    <p>Text: @complaint.Text</p>
+                    <p> @complaint.ReasonName</p>
+                }
+            }
+        </div>
+    </div>
+</div>

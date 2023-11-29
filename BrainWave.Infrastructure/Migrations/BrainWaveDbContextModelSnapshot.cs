@@ -36,6 +36,11 @@ namespace BrainWave.Infrastructure.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsAvailable")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
@@ -58,6 +63,29 @@ namespace BrainWave.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Articles");
+                });
+
+            modelBuilder.Entity("BrainWave.Core.Entities.ArticleComplaint", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ArticleId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StatusId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ArticleId");
+
+                    b.HasIndex("StatusId");
+
+                    b.ToTable("ArticleComplaints");
                 });
 
             modelBuilder.Entity("BrainWave.Core.Entities.Category", b =>
@@ -92,7 +120,7 @@ namespace BrainWave.Infrastructure.Migrations
                     b.Property<DateTime>("Date")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 11, 11, 11, 37, 21, 932, DateTimeKind.Utc).AddTicks(592));
+                        .HasDefaultValue(new DateTime(2023, 11, 26, 13, 39, 8, 961, DateTimeKind.Utc).AddTicks(9807));
 
                     b.Property<string>("Text")
                         .IsRequired()
@@ -119,13 +147,10 @@ namespace BrainWave.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ArticleId")
+                    b.Property<int>("ArticleComplaintId")
                         .HasColumnType("int");
 
                     b.Property<int>("ReasonId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StatusId")
                         .HasColumnType("int");
 
                     b.Property<string>("Text")
@@ -138,11 +163,9 @@ namespace BrainWave.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ArticleId");
+                    b.HasIndex("ArticleComplaintId");
 
                     b.HasIndex("ReasonId");
-
-                    b.HasIndex("StatusId");
 
                     b.HasIndex("UserId");
 
@@ -269,6 +292,35 @@ namespace BrainWave.Infrastructure.Migrations
                     b.ToTable("Participants");
                 });
 
+            modelBuilder.Entity("BrainWave.Core.Entities.Payment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ArticleId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Cost")
+                        .HasColumnType("float");
+
+                    b.Property<bool>("IsSuccess")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ArticleId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Payments");
+                });
+
             modelBuilder.Entity("BrainWave.Core.Entities.ReasonComplaint", b =>
                 {
                     b.Property<int>("Id")
@@ -356,6 +408,9 @@ namespace BrainWave.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<double>("EarnedMoney")
+                        .HasColumnType("float");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -415,6 +470,25 @@ namespace BrainWave.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("BrainWave.Core.Entities.ArticleComplaint", b =>
+                {
+                    b.HasOne("BrainWave.Core.Entities.Article", "Article")
+                        .WithMany("ArticleComplaints")
+                        .HasForeignKey("ArticleId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("BrainWave.Core.Entities.StatusComplaint", "Status")
+                        .WithMany("ArticleComplaints")
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Article");
+
+                    b.Navigation("Status");
+                });
+
             modelBuilder.Entity("BrainWave.Core.Entities.Comment", b =>
                 {
                     b.HasOne("BrainWave.Core.Entities.Article", "Article")
@@ -436,9 +510,9 @@ namespace BrainWave.Infrastructure.Migrations
 
             modelBuilder.Entity("BrainWave.Core.Entities.Complaint", b =>
                 {
-                    b.HasOne("BrainWave.Core.Entities.Article", "Article")
+                    b.HasOne("BrainWave.Core.Entities.ArticleComplaint", "ArticleComplaint")
                         .WithMany("Complaints")
-                        .HasForeignKey("ArticleId")
+                        .HasForeignKey("ArticleComplaintId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -448,23 +522,15 @@ namespace BrainWave.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("BrainWave.Core.Entities.StatusComplaint", "Status")
-                        .WithMany("Complaints")
-                        .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.HasOne("BrainWave.Core.Entities.User", "User")
                         .WithMany("Complaints")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.Navigation("Article");
+                    b.Navigation("ArticleComplaint");
 
                     b.Navigation("Reason");
-
-                    b.Navigation("Status");
 
                     b.Navigation("User");
                 });
@@ -545,6 +611,25 @@ namespace BrainWave.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("BrainWave.Core.Entities.Payment", b =>
+                {
+                    b.HasOne("BrainWave.Core.Entities.Article", "Article")
+                        .WithMany("Payments")
+                        .HasForeignKey("ArticleId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("BrainWave.Core.Entities.User", "User")
+                        .WithMany("Payments")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Article");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("BrainWave.Core.Entities.Saving", b =>
                 {
                     b.HasOne("BrainWave.Core.Entities.Article", "Article")
@@ -577,13 +662,20 @@ namespace BrainWave.Infrastructure.Migrations
 
             modelBuilder.Entity("BrainWave.Core.Entities.Article", b =>
                 {
-                    b.Navigation("Comments");
+                    b.Navigation("ArticleComplaints");
 
-                    b.Navigation("Complaints");
+                    b.Navigation("Comments");
 
                     b.Navigation("Likes");
 
+                    b.Navigation("Payments");
+
                     b.Navigation("Savings");
+                });
+
+            modelBuilder.Entity("BrainWave.Core.Entities.ArticleComplaint", b =>
+                {
+                    b.Navigation("Complaints");
                 });
 
             modelBuilder.Entity("BrainWave.Core.Entities.Category", b =>
@@ -610,7 +702,7 @@ namespace BrainWave.Infrastructure.Migrations
 
             modelBuilder.Entity("BrainWave.Core.Entities.StatusComplaint", b =>
                 {
-                    b.Navigation("Complaints");
+                    b.Navigation("ArticleComplaints");
                 });
 
             modelBuilder.Entity("BrainWave.Core.Entities.User", b =>
@@ -628,6 +720,8 @@ namespace BrainWave.Infrastructure.Migrations
                     b.Navigation("Messages");
 
                     b.Navigation("Participants");
+
+                    b.Navigation("Payments");
 
                     b.Navigation("Savings");
                 });

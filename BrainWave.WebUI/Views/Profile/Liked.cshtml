@@ -1,0 +1,142 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization;
+@inject IViewLocalizer _localizer;
+@model List<ArticleViewModel>
+@{
+    ViewData["Title"] = "Liked";
+}
+<div class="container">
+    <div class="d-flex justify-content-start">
+        @{
+            await Html.RenderPartialAsync("_ProfileSidePanel");
+        }
+        <div class="profile">
+            @if (Model.Count > 0)
+            {
+                <h1>@_localizer["Liked"]</h1>
+                <div class="d-flex justify-content-between">
+                    <div class="articles-content">
+
+                        @foreach (var article in Model)
+                        {
+                            <input type="hidden" id="@article.Id" />
+                            <div class="article pb-3" target="@article.Id">
+                                <h2>@article.Title</h2>
+                                <div class="author-article d-flex justify-content-start align-items-center">
+                                    <img class="d-block" src="~/media/avatars/@article.User.Photo" alt="avatar">
+                                    <p>
+                                        <a href="@Url.Action("Index", "Users", new { tag = @article.User.Tag})">
+                                            @article.User.Name @article.User.Surname
+                                        </a>
+                                    </p>
+                                </div>
+                                <p>@article.Date</p>
+                                <p>@article.CategoryName</p>
+                                <p>Price: @article.Price</p>
+                                <div>
+                                    @article.Text
+                                </div>
+                                @if (article.Price != 0)
+                                {
+                                    <a a href="@Url.Action("Index", "Payment", new { articleId = @article.Id})">Read more</a>
+                                }
+                                <div class="interactions">
+                                    <form class="d-flex justify-content-between" action="">
+                                        <div class="likes">
+                                            @if (!article.IsLiked)
+                                            {
+                                                <button class="d-block" type="submit" status="not-liked">
+                                                    <img src="~/media/not-liked.png" second="/media/liked.png" alt="">
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <button class="d-block" type="submit" status="liked">
+                                                    <img src="~/media/liked.png" second="/media/not-liked.png" alt="">
+                                                </button>
+                                            }
+
+                                            <p class="m-0">@article.LikesCount</p>
+
+                                        </div>
+                                        <div class="savings">
+                                            @if (!article.IsSaved)
+                                            {
+                                                <button class="d-block" type="submit" statusSave="not-saved">
+                                                    <img src="~/media/not-saved.png" secondSave="/media/saved.png" alt="">
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <button class="d-block" type="submit" statusSave="saved">
+                                                    <img src="~/media/saved.png" secondSave="/media/not-saved.png" alt="">
+                                                </button>
+                                            }
+
+                                            <p class="m-0">@article.SavingsCount</p>
+
+                                        </div>
+                                        <div class="comments">
+                                            <button class="d-block" type="submit">
+                                                <img src="~/media/comments.png" alt="">
+                                            </button>
+                                            @if (article.Comments == null)
+                                            {
+                                                <p class="m-0">0</p>
+                                            }
+                                            else
+                                            {
+                                                <p class="m-0">@article.Comments.Count</p>
+                                            }
+                                        </div>
+                                        <div class="download">
+                                            <button class="d-block" type="submit">
+                                                <img src="~/media/download.png" alt="">
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="comments-section">
+                                    <div>
+                                        <label>
+                                            <input class="comment-input" type="text" placeholder="Write a comment" name="comment">
+                                        </label>
+                                        <button class="sender-comment">Send</button>
+                                    </div>
+                                    <div class="comments-list">
+                                        @if (article.Comments != null)
+                                        {
+                                            @foreach (var comment in article.Comments)
+                                            {
+                                                <div class="comment pb-1 d-flex justify-content-between" targetComment="@comment.Id">
+                                                    <div>
+
+                                                        <div class="author-comment d-flex justify-content-start align-items-center">
+
+                                                            <img class="d-block" src="~/media/avatars/@comment.User.Photo" alt="avatar">
+                                                            <p class="m-0">@comment.User.Name @comment.User.Surname</p>
+                                                        </div>
+                                                        <div>
+                                                            @comment.Text
+                                                        </div>
+                                                    </div>
+
+                                                    <button class="delete-button">Delete</button>
+
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            }
+            else
+            {
+                <p>@_localizer["EmptyList"]</p>
+            }
+        </div>
+    </div>
+</div>

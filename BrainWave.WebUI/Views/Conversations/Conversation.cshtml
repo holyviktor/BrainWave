@@ -8,7 +8,7 @@
 <section class="container">
     <div>
         <div class="author-article d-flex justify-content-start align-items-center">
-            <img class="d-block" src="~/media/ava.jpg" alt="avatar">
+            <img class="d-block" src="~/media/conversations/@Model.Photo" alt="avatar">
             <div>
                 <h2>@Model.Name</h2>
                 <p>Participants: @Model.ParticipantsCount</p>
@@ -22,7 +22,7 @@
                 {
                     <li class="pb-1">
                         <div class="author-article d-flex justify-content-start align-items-center">
-                            <img class="d-block" src="~/media/ava.jpg" alt="avatar">
+                            <img class="d-block" src="~/media/avatars/@message.User.Photo" alt="avatar">
                             <div>
                                 <a href="@Url.Action("Index", "Users", new { tag = message.User.Tag})">
                                     @message.User.Name @message.User.Surname

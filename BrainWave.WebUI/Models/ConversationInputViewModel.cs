@@ -7,9 +7,8 @@ namespace BrainWave.WebUI.Models
         [Required(ErrorMessage = "Name is required.")]
         [StringLength(50)]
         public string Name { get; set; }
-        [Required(ErrorMessage = "Photo is required.")]
-        [StringLength(50)]
-        public string Photo { get; set; }
+        /*[Required(ErrorMessage = "Photo is required.")]*/
+        /*public IFormFile Photo { get; set; }*/
         [MinLength(1)]
         [Required(ErrorMessage = "Participants are required.")]
         public List<int> Participants { get; set; }

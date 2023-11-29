@@ -14,17 +14,17 @@
         <a asp-controller="Conversations" asp-action="Index">@_localizer["Conversations"]</a>
     </div>
     <div>
-        <a href="">@_localizer["Articles"]</a>
+        <a asp-controller="Profile" asp-action="Liked">@_localizer["Liked"]</a>
     </div>
     <div>
-        <a href="">@_localizer["Liked"]</a>
+        <a asp-controller="Profile" asp-action="Saved">@_localizer["Saved"]</a>
     </div>
     <div>
-        <a href="">@_localizer["Saved"]</a>
+        <a asp-controller="Profile" asp-action="Wallet">@_localizer["Wallet"]</a>
     </div>
     <div>
-        <a href="">@_localizer["Wallet"]</a>
-    </div>
+            <a asp-controller="Profile" asp-action="Complaints">@_localizer["Complaints"]</a>
+        </div>
     <div>
         <a asp-controller="Profile" asp-action="Logout">@_localizer["Exit"]</a>
     </div>

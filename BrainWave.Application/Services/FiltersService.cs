@@ -38,7 +38,9 @@ namespace BrainWave.Application.Services
                 }
                 articles = Sort(articles, sortType, sortOrder);
             }
-            return articles.Include(c => c.Comments)
+            return articles
+                .Where(a=>a.IsAvailable).Include(c => c.Comments)
+                .ThenInclude(c => c.User)
                     .Include(c => c.User)
                     .Include(c => c.Likes)
                     .Include(c => c.Savings)

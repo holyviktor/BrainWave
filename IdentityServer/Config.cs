@@ -11,6 +11,11 @@ public static class Config
         {
             new IdentityResources.OpenId(),
             new IdentityResources.Profile(),
+            new IdentityResource
+        {
+            Name = "Role",
+            UserClaims = new List<string> { "Role" }
+        }
         };
 
 
@@ -65,6 +70,7 @@ public static class Config
                 {
                     IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Profile,
+                    "Role"
                 },
                 AlwaysIncludeUserClaimsInIdToken = true
             },

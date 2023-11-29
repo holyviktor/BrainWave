@@ -8,6 +8,8 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System.Reflection;
 using BrainWave.WebUI.Hubs;
+using IdentityModel;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,6 +57,7 @@ builder.Services.AddAuthentication(options =>
         options.Scope.Add("openid");
         options.Scope.Add("profile");
         options.Scope.Add("api1");
+        options.Scope.Add("Role");
         options.GetClaimsFromUserInfoEndpoint = true;
 
         options.UsePkce = true;
@@ -62,6 +65,12 @@ builder.Services.AddAuthentication(options =>
 
         options.Scope.Add(OpenIdConnectScope.OpenId);
         options.Scope.Add(OpenIdConnectScope.OfflineAccess);
+
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            NameClaimType = JwtClaimTypes.Name,
+            RoleClaimType = JwtClaimTypes.Role,
+        };
     });
 
 
